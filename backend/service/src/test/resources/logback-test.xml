@@ -1,0 +1,10 @@
+<configuration>
+  <root level="ERROR">
+    <appender-ref ref="CONSOLE" />
+  </root>
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%msg%n</pattern>
+    </encoder>
+  </appender>
+</configuration>
