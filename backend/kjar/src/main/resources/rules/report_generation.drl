@@ -1,0 +1,41 @@
+package com.ftn.sbnz.kjar.rules;
+
+import com.ftn.sbnz.model.domain.*;
+
+dialect "java"
+
+rule "Report contraindicated therapy"
+when
+    $request : MedicationRequest( $patient : patient )
+    exists DetectedInteraction( patient == $patient, severity == SeverityLevel.CONTRAINDICATED )
+then
+    insert(new SafetyReport(
+        $patient,
+        SeverityLevel.CONTRAINDICATED,
+        "One or more interactions are contraindicated for this patient.",
+        "Review the therapy immediately, adjust the medication list, and consult a specialist."));
+end
+
+rule "Report high-risk therapy"
+when
+    $risk : TherapyRisk( highRisk == true, $patient : patient )
+    not SafetyReport( patient == $patient, highestSeverity == SeverityLevel.CONTRAINDICATED )
+then
+    insert(new SafetyReport(
+        $patient,
+        SeverityLevel.SERIOUS,
+        "Therapy has a high aggregated risk score.",
+        "Consider alternative drugs or dosage changes and monitor the patient closely."));
+end
+
+rule "Report default safe therapy"
+when
+    $request : MedicationRequest( $patient : patient )
+    not SafetyReport( patient == $patient )
+then
+    insert(new SafetyReport(
+        $patient,
+        SeverityLevel.MILD,
+        "No severe interactions detected.",
+        "Proceed with treatment and continue routine monitoring."));
+end

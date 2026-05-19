@@ -1,0 +1,154 @@
+package com.ftn.sbnz.kjar.rules;
+
+import com.ftn.sbnz.model.domain.*;
+
+dialect "java"
+
+// SPECIAL CASE DRUG-DISEASE INTERACTIONS:
+
+// Amitriptilin + srcana aritmija
+rule "Amitriptyline and arrhythmia serious interaction"
+when
+    $request : MedicationRequest( $patient : patient, $newMedication : newMedication )
+    eval($newMedication.getName().equalsIgnoreCase("Amitriptyline"))
+    eval($patient.hasDiagnosis("cardiac arrhythmia"))
+then
+    insert(new DetectedInteraction(
+        $patient,
+        null,
+        $newMedication,
+        InteractionType.DRUG_DISEASE,
+        SeverityLevel.SERIOUS,
+        SeverityLevel.SERIOUS.getScore(),
+        "Amitriptyline may worsen arrhythmia in cardiac patients."));
+end
+
+// Alergija na penicilin + antibiotik iz grupe penicilina
+rule "Penicillin allergy and penicillin antibiotic contraindicated"
+when
+    $request : MedicationRequest( $patient : patient, $newMedication : newMedication,
+                                   newMedication.category == MedicationCategory.ANTIBIOTIC )
+    eval($patient.hasAllergy("penicillin") &&
+         ($newMedication.getName().toLowerCase().contains("penicillin") ||
+          $newMedication.getName().toLowerCase().contains("amoxicillin") ||
+          $newMedication.getName().toLowerCase().contains("ampicillin") ||
+          $newMedication.getName().toLowerCase().contains("oxacillin")))
+then
+    insert(new DetectedInteraction(
+        $patient,
+        null,
+        $newMedication,
+        InteractionType.DRUG_DISEASE,
+        SeverityLevel.CONTRAINDICATED,
+        SeverityLevel.CONTRAINDICATED.getScore(),
+        "Penicillin allergy with a penicillin antibiotic is contraindicated due to anaphylaxis risk."));
+end
+
+
+// SPECIAL CASE DRUG-DRUG INTERACTIONS:
+
+// Aspirin + antikoagulans - antiagregacijsko dejstvo, povecava rizik od krvarenja
+rule "Aspirin and anticoagulant serious interaction"
+when
+    $request : MedicationRequest( $patient : patient, $newMedication : newMedication )
+    eval($newMedication.getName().equalsIgnoreCase("Aspirin"))
+    eval($patient.hasMedicationByCategory(MedicationCategory.ANTICOAGULANT))
+then
+    insert(new DetectedInteraction(
+        $patient,
+        $patient.findMedicationByCategory(MedicationCategory.ANTICOAGULANT),
+        $newMedication,
+        InteractionType.DRUG_DRUG,
+        SeverityLevel.SERIOUS,
+        SeverityLevel.SERIOUS.getScore(),
+        "Aspirin has antiplatelet effects. Combined with an anticoagulant, it significantly increases bleeding risk."));
+end
+
+// Ibuprofen + antikoagulans - inhibira trombocite i iritira zeludac, rizik od gastrointestinalno krvarenje
+rule "Ibuprofen and anticoagulant serious interaction"
+when
+    $request : MedicationRequest( $patient : patient, $newMedication : newMedication )
+    eval($newMedication.getName().equalsIgnoreCase("Ibuprofen"))
+    eval($patient.hasMedicationByCategory(MedicationCategory.ANTICOAGULANT))
+then
+    insert(new DetectedInteraction(
+        $patient,
+        $patient.findMedicationByCategory(MedicationCategory.ANTICOAGULANT),
+        $newMedication,
+        InteractionType.DRUG_DRUG,
+        SeverityLevel.SERIOUS,
+        SeverityLevel.SERIOUS.getScore(),
+        "Ibuprofen inhibits platelet aggregation and irritates the gastric mucosa. Combined with an anticoagulant, it increases risk of serious GI bleeding."));
+end
+
+// Simvastatin + Eritromicin - jak CYP3A4 inhibitor, drasticno povecava nivo Simvastatina, rizik od rabdomiolize
+rule "Simvastatin and Erythromycin contraindicated interaction"
+when
+    $request : MedicationRequest( $patient : patient, $newMedication : newMedication )
+    eval($newMedication.getName().equalsIgnoreCase("Simvastatin"))
+    $existing : Medication() from $patient.getCurrentMedications()
+    eval($existing.getName().equalsIgnoreCase("Erythromycin"))
+then
+    insert(new DetectedInteraction(
+        $patient,
+        $existing,
+        $newMedication,
+        InteractionType.DRUG_DRUG,
+        SeverityLevel.CONTRAINDICATED,
+        SeverityLevel.CONTRAINDICATED.getScore(),
+        "Erythromycin strongly inhibits CYP3A4 and dramatically increases simvastatin plasma levels, causing high risk of rhabdomyolysis."));
+end
+
+
+// SPECIAL CASE DRUG-FOOD INTERACTIONS:
+
+// Metronidazol + alkohol - teske nuspojave
+rule "Metronidazole and alcohol contraindicated interaction"
+when
+    $request : MedicationRequest( $patient : patient, $newMedication : newMedication )
+    eval($newMedication.getName().equalsIgnoreCase("Metronidazole"))
+    eval($patient.hasFoodHabit(FoodHabit.ALCOHOL))
+then
+    insert(new DetectedInteraction(
+        $patient,
+        null,
+        $newMedication,
+        InteractionType.DRUG_FOOD,
+        SeverityLevel.CONTRAINDICATED,
+        SeverityLevel.CONTRAINDICATED.getScore(),
+        "Metronidazole with alcohol is contraindicated - causes severe reactions (nausea, vomiting, tachycardia)."));
+end
+
+// Varfarin + hrana bogata vitaminom K
+rule "Warfarin and vitamin K rich food serious interaction"
+when
+    $request : MedicationRequest( $patient : patient, $newMedication : newMedication )
+    eval($newMedication.getName().equalsIgnoreCase("Warfarin"))
+    eval($patient.hasFoodHabit(FoodHabit.VITAMIN_K_RICH))
+then
+    insert(new DetectedInteraction(
+        $patient,
+        null,
+        $newMedication,
+        InteractionType.DRUG_FOOD,
+        SeverityLevel.SERIOUS,
+        SeverityLevel.SERIOUS.getScore(),
+        "Warfarin is highly sensitive to vitamin K. Vitamin K-rich food significantly reduces warfarin efficacy and increases clotting risk."));
+end
+
+// Metformin + alkohol - poseban mehanizam, rizik od lakticke acidoze
+rule "Metformin and alcohol lactic acidosis risk"
+when
+    $request : MedicationRequest( $patient : patient, $newMedication : newMedication )
+    eval($newMedication.getName().equalsIgnoreCase("Metformin"))
+    eval($patient.hasFoodHabit(FoodHabit.ALCOHOL))
+then
+    insert(new DetectedInteraction(
+        $patient,
+        null,
+        $newMedication,
+        InteractionType.DRUG_FOOD,
+        SeverityLevel.SERIOUS,
+        SeverityLevel.SERIOUS.getScore(),
+        "Metformin combined with alcohol increases risk of lactic acidosis, a rare but life-threatening condition."));
+end

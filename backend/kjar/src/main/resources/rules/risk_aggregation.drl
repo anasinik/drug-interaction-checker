@@ -1,0 +1,53 @@
+package com.ftn.sbnz.kjar.rules;
+
+import com.ftn.sbnz.model.domain.*;
+
+dialect "java"
+
+// povecava ozbiljnost interakcije kod starijih pacijenata koji uzimaju lijekove koji se izlucuju putem bubrega
+rule "Increase interaction severity for elderly patients with renal clearance"
+when
+    $interaction : DetectedInteraction( $patient : patient, severity == SeverityLevel.SERIOUS )
+    eval($patient.getAge() > 65 &&
+         (($interaction.getExistingMedication() != null && $interaction.getExistingMedication().isRenallyCleared()) ||
+          $interaction.getNewMedication().isRenallyCleared()))
+then
+    retract($interaction);
+    insert(new DetectedInteraction(
+        $patient,
+        $interaction.getExistingMedication(),
+        $interaction.getNewMedication(),
+        $interaction.getInteractionType(),
+        SeverityLevel.CONTRAINDICATED,
+        SeverityLevel.CONTRAINDICATED.getScore(),
+        $interaction.getReason() + " Patient older than 65 with a renally cleared drug raises risk to contraindicated."));
+end
+
+// povecava ozbiljnost blage interakcije na ozbiljnu kod pacijenata sa vise od 5 lijekova (polifarmacija)
+rule "Elevate mild interaction in polypharmacy"
+when
+    $interaction : DetectedInteraction( $patient : patient, severity == SeverityLevel.MILD )
+    eval($patient.hasPolypharmacy())
+then
+    retract($interaction);
+    insert(new DetectedInteraction(
+        $patient,
+        $interaction.getExistingMedication(),
+        $interaction.getNewMedication(),
+        $interaction.getInteractionType(),
+        SeverityLevel.SERIOUS,
+        SeverityLevel.SERIOUS.getScore(),
+        $interaction.getReason() + " Patient has polypharmacy, so the interaction is upgraded to serious."));
+end
+
+// racuna ukupni rizik terapije na osnovu detektovanih interakcija
+rule "Calculate therapy risk score"
+when
+    $request : MedicationRequest( $patient : patient )
+    $totalScore : Number() from accumulate(
+        DetectedInteraction( patient == $patient, $score : score ),
+        sum($score)
+    )
+then
+    insert(new TherapyRisk($patient, $totalScore.intValue(), $totalScore.intValue() >= 10));
+end
