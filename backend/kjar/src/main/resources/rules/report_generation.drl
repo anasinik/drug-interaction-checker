@@ -5,6 +5,7 @@ import com.ftn.sbnz.model.domain.*;
 dialect "java"
 
 rule "Report contraindicated therapy"
+salience 10
 when
     $request : MedicationRequest( $patient : patient )
     exists DetectedInteraction( patient == $patient, severity == SeverityLevel.CONTRAINDICATED )
@@ -17,6 +18,7 @@ then
 end
 
 rule "Report high-risk therapy"
+salience 10
 when
     $risk : TherapyRisk( highRisk == true, $patient : patient )
     not SafetyReport( patient == $patient, highestSeverity == SeverityLevel.CONTRAINDICATED )
@@ -29,8 +31,10 @@ then
 end
 
 rule "Report default safe therapy"
+salience 0
 when
     $request : MedicationRequest( $patient : patient )
+    not DetectedInteraction( patient == $patient )
     not SafetyReport( patient == $patient )
 then
     insert(new SafetyReport(

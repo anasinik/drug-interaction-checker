@@ -1,0 +1,38 @@
+// This file is a temporary placeholder for testing interactions between antibiotics and other drugs.
+// It will be populated with specific rules using templates in the future.
+package com.ftn.sbnz.kjar.rules;
+import com.ftn.sbnz.model.domain.*;
+
+rule "Anticoagulant and antibiotic serious interaction"
+when
+    $request : MedicationRequest( $patient : patient, $newMedication : newMedication,
+                                   newMedication.category == MedicationCategory.ANTIBIOTIC )
+    $existing : Medication() from $patient.getCurrentMedications()
+    eval($existing.getCategory() == MedicationCategory.ANTICOAGULANT)
+then
+    insert(new DetectedInteraction(
+        $patient,
+        $existing,
+        $newMedication,
+        InteractionType.DRUG_DRUG,
+        SeverityLevel.SERIOUS,
+        SeverityLevel.SERIOUS.getScore(),
+        "Antibiotics reduce vitamin K-producing bacteria, enhancing anticoagulant effect and increasing bleeding risk."));
+end
+
+rule "Antidiabetic and antibiotic serious interaction"
+when
+    $request : MedicationRequest( $patient : patient, $newMedication : newMedication,
+                                   newMedication.category == MedicationCategory.ANTIBIOTIC )
+    $existing : Medication() from $patient.getCurrentMedications()
+    eval($existing.getCategory() == MedicationCategory.ANTIDIABETIC)
+then
+    insert(new DetectedInteraction(
+        $patient,
+        $existing,
+        $newMedication,
+        InteractionType.DRUG_DRUG,
+        SeverityLevel.SERIOUS,
+        SeverityLevel.SERIOUS.getScore(),
+        "Antibiotics can potentiate antidiabetic effect and cause hypoglycemia."));
+end

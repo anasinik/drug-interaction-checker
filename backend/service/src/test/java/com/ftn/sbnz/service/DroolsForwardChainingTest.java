@@ -24,8 +24,7 @@ public class DroolsForwardChainingTest {
         @BeforeEach
         public void setup() {
                 KieServices ks = KieServices.Factory.get();
-                KieContainer kContainer = ks
-                                .newKieContainer(ks.newReleaseId("com.ftn.sbnz", "kjar", "0.0.1-SNAPSHOT"));
+                KieContainer kContainer = ks.newKieContainer(ks.newReleaseId("com.ftn.sbnz", "kjar", "0.0.1-SNAPSHOT"));
                 kieSession = kContainer.newKieSession();
         }
 
@@ -42,9 +41,7 @@ public class DroolsForwardChainingTest {
         @DisplayName("Level 1: Detect DRUG-DISEASE interaction - Amitriptyline + cardiac arrhythmia")
         public void testDetectDrugDiseaseInteraction_AmitriptillinArrhythmia() {
                 PatientProfile patient = new PatientProfile(
-                                "Marko Markovic",
-                                70,
-                                75.0,
+                                "Marko Markovic", 70, 75.0,
                                 new ArrayList<>(),
                                 List.of("cardiac arrhythmia"),
                                 new ArrayList<>(),
@@ -79,21 +76,17 @@ public class DroolsForwardChainingTest {
                 assertNotNull(detected.getNewMedication());
                 assertEquals("Amitriptyline", detected.getNewMedication().getName());
 
-                System.out.println();
-                System.out.println("  LEVEL 1 PASSED - DRUG-DISEASE interaction detected");
-                System.out.println("  Drug     : " + detected.getNewMedication().getName());
-                System.out.println("  Type     : " + detected.getInteractionType());
-                System.out.println("  Severity : " + detected.getSeverity() + " (score: " + detected.getScore() + ")");
-                System.out.println();
+                System.out.println("LEVEL 1 PASSED - drug-disease interaction detected");
+                System.out.println("drug: " + detected.getNewMedication().getName());
+                System.out.println("type: " + detected.getInteractionType());
+                System.out.println("severity: " + detected.getSeverity() + " (score: " + detected.getScore() + ")");
         }
 
         @Test
         @DisplayName("Level 1: Detect ALLERGY interaction - Penicillin antibiotic with penicillin allergy")
         public void testDetectContraindicatedAllergy_PenicillinAllergy() {
                 PatientProfile patient = new PatientProfile(
-                                "Ana Anic",
-                                45,
-                                65.0,
+                                "Ana Anic", 45, 65.0,
                                 new ArrayList<>(),
                                 new ArrayList<>(),
                                 List.of("penicillin"),
@@ -126,12 +119,10 @@ public class DroolsForwardChainingTest {
                 assertNotNull(detected.getReason());
                 assertFalse(detected.getReason().isBlank());
 
-                System.out.println();
-                System.out.println("  LEVEL 1 PASSED - ALLERGY contraindication detected");
-                System.out.println("  Drug     : " + detected.getNewMedication().getName());
-                System.out.println("  Allergy  : " + patient.getAllergies());
-                System.out.println("  Severity : " + detected.getSeverity());
-                System.out.println();
+                System.out.println("LEVEL 1 PASSED - allergy contraindication detected");
+                System.out.println("drug: " + detected.getNewMedication().getName());
+                System.out.println("allergy: " + patient.getAllergies());
+                System.out.println("severity: " + detected.getSeverity());
         }
 
         // LEVEL 2: RISK AGGREGATION
@@ -152,9 +143,7 @@ public class DroolsForwardChainingTest {
                                                 .renallyCleared(false).hepaticallyMetabolized(true).build());
 
                 PatientProfile patient = new PatientProfile(
-                                "Pera Petrovic",
-                                68,
-                                80.0,
+                                "Pera Petrovic", 68, 80.0,
                                 new ArrayList<>(medications),
                                 List.of("hypertension", "diabetes"),
                                 new ArrayList<>(),
@@ -186,23 +175,18 @@ public class DroolsForwardChainingTest {
                 assertTrue(risk.getPatient().hasPolypharmacy(), "Patient should have polypharmacy");
                 assertTrue(risk.getTotalScore() >= 0, "Total score must not be negative");
 
-                System.out.println();
-                System.out.println("  LEVEL 2 PASSED - Risk aggregation");
-                System.out.println("  Patient      : " + patient.getName());
-                System.out.println("  Medications  : " + patient.getMedicationCount());
-                System.out.println("  Polypharmacy : " + patient.hasPolypharmacy());
-                System.out.println("  Total score  : " + risk.getTotalScore());
-                System.out.println("  High risk    : " + risk.isHighRisk());
-                System.out.println();
+                System.out.println("LEVEL 2 PASSED - risk aggregation");
+                System.out.println("patient: " + patient.getName());
+                System.out.println("medications: " + patient.getMedicationCount() + ", polypharmacy: "
+                                + patient.hasPolypharmacy());
+                System.out.println("total score: " + risk.getTotalScore() + ", high risk: " + risk.isHighRisk());
         }
 
         @Test
         @DisplayName("Level 2: Risk aggregation - Score >= 10 is HIGH RISK")
         public void testRiskAggregation_HighRiskThreshold() {
                 PatientProfile patient = new PatientProfile(
-                                "Jovana Jovanovic",
-                                72,
-                                70.0,
+                                "Jovana Jovanovic", 72, 70.0,
                                 List.of(Medication.builder().name("Warfarin").category(MedicationCategory.ANTICOAGULANT)
                                                 .renallyCleared(false).hepaticallyMetabolized(true).build()),
                                 List.of("cardiac arrhythmia"),
@@ -236,18 +220,14 @@ public class DroolsForwardChainingTest {
                 assertNotNull(risk, "TherapyRisk must not be null");
                 assertTrue(risk.getTotalScore() >= 0, "Score must not be negative");
 
-                System.out.println();
-                System.out.println("  LEVEL 2 PASSED - High risk threshold");
-                System.out.println("  Detected interactions : " + detectedInteractions.size());
+                System.out.println("LEVEL 2 PASSED - high risk threshold");
+                System.out.println("detected interactions: " + detectedInteractions.size());
                 detectedInteractions.forEach(di -> {
                         DetectedInteraction interaction = (DetectedInteraction) di;
-                        System.out.println("    - " + interaction.getNewMedication().getName()
-                                        + " : " + interaction.getSeverity()
-                                        + " (score: " + interaction.getScore() + ")");
+                        System.out.println("  " + interaction.getNewMedication().getName() + " - "
+                                        + interaction.getSeverity() + " (score: " + interaction.getScore() + ")");
                 });
-                System.out.println("  Total score  : " + risk.getTotalScore());
-                System.out.println("  High risk    : " + risk.isHighRisk() + " (threshold: 10)");
-                System.out.println();
+                System.out.println("total score: " + risk.getTotalScore() + ", high risk: " + risk.isHighRisk());
         }
 
         // LEVEL 3: REPORT GENERATION
@@ -256,9 +236,7 @@ public class DroolsForwardChainingTest {
         @DisplayName("Level 3: Report generation - CONTRAINDICATED therapy report")
         public void testReportGeneration_ContraindicatedReport() {
                 PatientProfile patient = new PatientProfile(
-                                "Dragan Dragic",
-                                50,
-                                85.0,
+                                "Dragan Dragic", 50, 85.0,
                                 new ArrayList<>(),
                                 new ArrayList<>(),
                                 List.of("penicillin"),
@@ -296,22 +274,18 @@ public class DroolsForwardChainingTest {
                                 report.getRecommendation().toLowerCase().contains("adjust"),
                                 "Recommendation should contain action items");
 
-                System.out.println();
-                System.out.println("  LEVEL 3 PASSED - Contraindicated therapy report");
-                System.out.println("  Patient        : " + report.getPatient().getName());
-                System.out.println("  Severity       : " + report.getHighestSeverity());
-                System.out.println("  Summary        : " + report.getSummary());
-                System.out.println("  Recommendation : " + report.getRecommendation());
-                System.out.println();
+                System.out.println("LEVEL 3 PASSED - contraindicated therapy report");
+                System.out.println("patient: " + report.getPatient().getName());
+                System.out.println("severity: " + report.getHighestSeverity());
+                System.out.println("summary: " + report.getSummary());
+                System.out.println("recommendation: " + report.getRecommendation());
         }
 
         @Test
         @DisplayName("Level 3: Report generation - HIGH RISK therapy report")
         public void testReportGeneration_HighRiskReport() {
                 PatientProfile patient = new PatientProfile(
-                                "Svetlana Svetkovic",
-                                70,
-                                65.0,
+                                "Svetlana Svetkovic", 70, 65.0,
                                 List.of(
                                                 Medication.builder().name("Metformin")
                                                                 .category(MedicationCategory.ANTIDIABETIC)
@@ -357,22 +331,18 @@ public class DroolsForwardChainingTest {
                 assertNotNull(report.getSummary());
                 assertFalse(report.getSummary().isBlank());
 
-                System.out.println();
-                System.out.println("  LEVEL 3 PASSED - High risk therapy report");
-                System.out.println("  Patient        : " + report.getPatient().getName());
-                System.out.println("  Severity       : " + report.getHighestSeverity());
-                System.out.println("  Summary        : " + report.getSummary());
-                System.out.println("  Recommendation : " + report.getRecommendation());
-                System.out.println();
+                System.out.println("LEVEL 3 PASSED - high risk therapy report");
+                System.out.println("patient: " + report.getPatient().getName());
+                System.out.println("severity: " + report.getHighestSeverity());
+                System.out.println("summary: " + report.getSummary());
+                System.out.println("recommendation: " + report.getRecommendation());
         }
 
         @Test
         @DisplayName("Level 3: Report generation - SAFE therapy report")
         public void testReportGeneration_SafeReport() {
                 PatientProfile patient = new PatientProfile(
-                                "Milos Milosevic",
-                                40,
-                                75.0,
+                                "Milos Milosevic", 40, 75.0,
                                 new ArrayList<>(),
                                 new ArrayList<>(),
                                 new ArrayList<>(),
@@ -405,20 +375,33 @@ public class DroolsForwardChainingTest {
                 assertNotNull(report.getRecommendation());
                 assertFalse(report.getRecommendation().isBlank());
 
-                System.out.println();
-                System.out.println("  LEVEL 3 PASSED - Safe therapy report");
-                System.out.println("  Patient        : " + report.getPatient().getName());
-                System.out.println("  Severity       : " + report.getHighestSeverity());
-                System.out.println("  Summary        : " + report.getSummary());
-                System.out.println("  Recommendation : " + report.getRecommendation());
-                System.out.println();
+                System.out.println("LEVEL 3 PASSED - safe therapy report");
+                System.out.println("patient: " + report.getPatient().getName());
+                System.out.println("severity: " + report.getHighestSeverity());
+                System.out.println("summary: " + report.getSummary());
+                System.out.println("recommendation: " + report.getRecommendation());
         }
 
-        // COMPLEX SCENARIO
-
         @Test
-        @DisplayName("Complex scenario: All three forward chaining levels together")
+        @DisplayName("Complex scenario: Elderly patient with multiple interactions, all FC levels")
         public void testCompleteForwardChainingFlow_ComplexScenario() {
+                System.out.println("STARTING COMPLEX SCENARIO TEST");
+                // Pacijent Pacijentijevic, 68 god, dijabetes i hipertenzija, alergija na
+                // penicilin
+                // trenutni lijekovi: Warfarin (antikoagulans), Metformin (antidijabetik),
+                // Lisinopril (antihipertenziv)
+                // novi lijek: Amoxicillin (antibiotik iz grupe penicilina)
+                //
+                // level 1 - detektovane interakcije:
+                // 1. alergija na penicilin + amoxicillin -> CONTRAINDICATED (score 10)
+                // 2. antikoagulans (warfarin) + antibiotik -> SERIOUS, metformin renallyCleared
+                // + pacijent 68 god -> CONTRAINDICATED (score 10)
+                // 3. antidijabetik (metformin) + antibiotik -> SERIOUS, metformin
+                // renallyCleared + pacijent 68 god -> CONTRAINDICATED (score 10)
+                //
+                // level 2 - agregacija: score = 30, highRisk = true
+                // level 3 - report: CONTRAINDICATED
+
                 List<Medication> existingMeds = List.of(
                                 Medication.builder().name("Warfarin").category(MedicationCategory.ANTICOAGULANT)
                                                 .renallyCleared(false).hepaticallyMetabolized(true).build(),
@@ -428,18 +411,16 @@ public class DroolsForwardChainingTest {
                                                 .renallyCleared(true).hepaticallyMetabolized(false).build());
 
                 PatientProfile patient = new PatientProfile(
-                                "Bora Borivoje",
-                                76,
-                                70.0,
+                                "Pacijent Pacijentijevic", 68, 78.0,
                                 new ArrayList<>(existingMeds),
-                                List.of("atrial fibrillation", "diabetes", "hypertension"),
-                                new ArrayList<>(),
+                                List.of("diabetes", "hypertension"),
+                                List.of("penicillin"),
                                 new ArrayList<>());
 
                 Medication newMedication = Medication.builder()
-                                .name("Aspirin")
-                                .category(MedicationCategory.ANTICOAGULANT)
-                                .renallyCleared(false)
+                                .name("Amoxicillin")
+                                .category(MedicationCategory.ANTIBIOTIC)
+                                .renallyCleared(true)
                                 .hepaticallyMetabolized(false)
                                 .build();
 
@@ -456,58 +437,48 @@ public class DroolsForwardChainingTest {
                 Collection<?> therapyRisks = kieSession.getObjects(obj -> obj instanceof TherapyRisk);
                 Collection<?> reports = kieSession.getObjects(obj -> obj instanceof SafetyReport);
 
-                // VERIFY LEVEL 1
-                assertTrue(firedRules > 0, "At least one rule should have fired");
-                assertFalse(interactions.isEmpty(), "At least one interaction should be detected");
+                // level 1 - interakcije su detektovane i sve imaju pozitivan score
+                assertTrue(firedRules > 0);
+                assertFalse(interactions.isEmpty());
                 interactions.forEach(obj -> {
                         DetectedInteraction di = (DetectedInteraction) obj;
                         assertNotNull(di.getSeverity());
                         assertNotNull(di.getInteractionType());
                         assertNotNull(di.getReason());
-                        assertTrue(di.getScore() > 0, "Interaction score must be positive");
+                        assertTrue(di.getScore() > 0);
                 });
 
-                // VERIFY LEVEL 2
-                assertFalse(therapyRisks.isEmpty(), "A TherapyRisk fact should be created");
+                // level 2 - ukupni score >= 10, terapija je visokorizicna
+                assertFalse(therapyRisks.isEmpty());
                 TherapyRisk risk = (TherapyRisk) therapyRisks.iterator().next();
-                assertNotNull(risk, "TherapyRisk must not be null");
-                assertNotNull(risk.getPatient());
-                assertTrue(risk.getTotalScore() >= 0, "Score must not be negative");
+                assertTrue(risk.getTotalScore() >= 10, "score should be >= 10, was: " + risk.getTotalScore());
+                assertTrue(risk.isHighRisk());
 
-                // VERIFY LEVEL 3
-                assertFalse(reports.isEmpty(), "A SafetyReport should be generated");
-                SafetyReport report = (SafetyReport) reports.iterator().next();
-                assertNotNull(report.getRecommendation(), "Recommendation must not be null");
-                assertFalse(report.getRecommendation().isBlank(), "Recommendation must not be blank");
-                assertNotNull(report.getHighestSeverity(), "Highest severity must not be null");
-                assertNotNull(report.getPatient(), "Patient in report must not be null");
+                // level 3 - generisan je CONTRAINDICATED report
+                assertFalse(reports.isEmpty());
+                SafetyReport report = reports.stream()
+                                .map(r -> (SafetyReport) r)
+                                .filter(r -> r.getHighestSeverity() == SeverityLevel.CONTRAINDICATED)
+                                .findFirst()
+                                .orElseThrow(() -> new AssertionError("No CONTRAINDICATED report found"));
+                assertNotNull(report.getRecommendation());
+                assertFalse(report.getRecommendation().isBlank());
 
-                System.out.println();
-                System.out.println("  ============================================================");
-                System.out.println("  COMPLEX SCENARIO PASSED - Full forward chaining flow");
-                System.out.println("  ============================================================");
-                System.out.println();
-                System.out.println("  LEVEL 1 - INTERACTION DETECTION");
-                interactions.forEach(interaction -> {
-                        DetectedInteraction di = (DetectedInteraction) interaction;
-                        System.out.println("    Drug     : " + di.getNewMedication().getName());
-                        System.out.println("    Type     : " + di.getInteractionType());
-                        System.out.println("    Severity : " + di.getSeverity() + " (score: " + di.getScore() + ")");
-                        System.out.println("    Reason   : " + di.getReason());
+                System.out.println("COMPLEX SCENARIO PASSED");
+                System.out.println("-- level 1 interactions (" + interactions.size() + ") --");
+                interactions.forEach(i -> {
+                        DetectedInteraction di = (DetectedInteraction) i;
+                        System.out.println("  " + di.getNewMedication().getName() + " / " + di.getInteractionType()
+                                        + " / " + di.getSeverity() + " (score: " + di.getScore() + ")");
+                        System.out.println("  reason: " + di.getReason());
                 });
-                System.out.println();
-                System.out.println("  LEVEL 2 - RISK AGGREGATION");
-                System.out.println("    Interactions : " + interactions.size());
-                System.out.println("    Total score  : " + risk.getTotalScore());
-                System.out.println("    High risk    : " + risk.isHighRisk() + " (threshold: 10)");
-                System.out.println();
-                System.out.println("  LEVEL 3 - REPORT");
-                System.out.println("    Patient    : " + report.getPatient().getName()
-                                + " (age " + report.getPatient().getAge() + ")");
-                System.out.println("    Diagnoses  : " + report.getPatient().getDiagnoses());
-                System.out.println("    Severity   : " + report.getHighestSeverity());
-                System.out.println("    Summary    : " + report.getSummary());
-                System.out.println("    Rec        : " + report.getRecommendation());
-                System.out.println();
+                System.out.println("-- level 2 risk --");
+                System.out.println("total score: " + risk.getTotalScore() + ", high risk: " + risk.isHighRisk());
+                System.out.println("-- level 3 report --");
+                System.out.println("patient: " + report.getPatient().getName() + " (age "
+                                + report.getPatient().getAge() + ")");
+                System.out.println("severity: " + report.getHighestSeverity());
+                System.out.println("summary: " + report.getSummary());
+                System.out.println("recommendation: " + report.getRecommendation());
         }
 }
