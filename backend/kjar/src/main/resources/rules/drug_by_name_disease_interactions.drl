@@ -1,0 +1,24 @@
+package com.ftn.sbnz.kjar.templates;
+import com.ftn.sbnz.model.domain.*;
+
+rule "Drug-Disease Interaction (named): Amitriptyline + cardiac arrhythmia - row 0"
+when
+    $req : MedicationRequest(
+        $patient : patient,
+        $newMed : newMedication
+    )
+    eval($newMed.getName().equalsIgnoreCase("Amitriptyline"))
+    eval($patient.hasDiagnosis("cardiac arrhythmia"))
+then
+    insert(new DetectedInteraction(
+        $patient,
+        null,
+        $newMed,
+        InteractionType.DRUG_DISEASE,
+        SeverityLevel.SERIOUS,
+        SeverityLevel.SERIOUS.getScore(),
+        "Tricyclic antidepressants may worsen arrhythmia"
+    ));
+end
+
+

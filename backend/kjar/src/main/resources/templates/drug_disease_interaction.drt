@@ -1,0 +1,32 @@
+template header
+medicationCategory
+diagnosis
+severity
+reason
+
+package com.ftn.sbnz.kjar.templates;
+import com.ftn.sbnz.model.domain.*;
+
+template "drug-disease-interaction"
+
+rule "Drug-Disease Interaction: @{medicationCategory} + @{diagnosis} - row @{row.rowNumber}"
+when
+    $req : MedicationRequest(
+        $patient : patient,
+        $newMed : newMedication,
+        newMedication.category == MedicationCategory.@{medicationCategory}
+    )
+    eval($patient.hasDiagnosis("@{diagnosis}"))
+then
+    insert(new DetectedInteraction(
+        $patient,
+        null,
+        $newMed,
+        InteractionType.DRUG_DISEASE,
+        SeverityLevel.@{severity},
+        SeverityLevel.@{severity}.getScore(),
+        "@{reason}"
+    ));
+end
+
+end template

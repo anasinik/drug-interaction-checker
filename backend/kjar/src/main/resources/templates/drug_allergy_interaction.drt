@@ -1,0 +1,32 @@
+template header
+allergyName
+medicationCategory
+severity
+reason
+
+package com.ftn.sbnz.kjar.templates;
+import com.ftn.sbnz.model.domain.*;
+
+template "drug-allergy-interaction"
+
+rule "Drug-Allergy Interaction: @{allergyName} + @{medicationCategory} - row @{row.rowNumber}"
+when
+    $req : MedicationRequest(
+        $patient : patient,
+        $newMed : newMedication,
+        newMedication.category == MedicationCategory.@{medicationCategory}
+    )
+    eval($patient.hasAllergy("@{allergyName}"))
+then
+    insert(new DetectedInteraction(
+        $patient,
+        null,
+        $newMed,
+        InteractionType.DRUG_DISEASE,
+        SeverityLevel.@{severity},
+        SeverityLevel.@{severity}.getScore(),
+        "@{reason}"
+    ));
+end
+
+end template

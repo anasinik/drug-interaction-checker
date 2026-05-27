@@ -37,7 +37,43 @@ then
     ));
 end
 
-rule "Drug-Drug Interaction: ANTICOAGULANT + ANTIDEPRESSANT - row 1"
+rule "Drug-Drug Interaction: ANTIBIOTIC + ANTICOAGULANT - row 1"
+when
+    $req : MedicationRequest(
+        $patient : patient,
+        $newMed : newMedication
+    )
+    (
+        MedicationRequest(
+            newMedication.category == MedicationCategory.ANTICOAGULANT
+        ) and
+        exists Medication(category == MedicationCategory.ANTIBIOTIC)
+            from $patient.currentMedications
+    ) or (
+        MedicationRequest(
+            newMedication.category == MedicationCategory.ANTIBIOTIC
+        ) and
+        exists Medication(category == MedicationCategory.ANTICOAGULANT)
+            from $patient.currentMedications
+    )
+    $existing : Medication(
+        category == MedicationCategory.ANTIBIOTIC ||
+        category == MedicationCategory.ANTICOAGULANT,
+        category != $newMed.category
+    ) from $patient.currentMedications
+then
+    insert(new DetectedInteraction(
+        $patient,
+        $existing,
+        $newMed,
+        InteractionType.DRUG_DRUG,
+        SeverityLevel.SERIOUS,
+        SeverityLevel.SERIOUS.getScore(),
+        "Antibiotics reduce vitamin K-producing bacteria..."
+    ));
+end
+
+rule "Drug-Drug Interaction: ANTICOAGULANT + ANTIDEPRESSANT - row 2"
 when
     $req : MedicationRequest(
         $patient : patient,
@@ -73,7 +109,43 @@ then
     ));
 end
 
-rule "Drug-Drug Interaction: ANTIDEPRESSANT + ANTIDEPRESSANT - row 2"
+rule "Drug-Drug Interaction: ANTIDEPRESSANT + ANTICOAGULANT - row 3"
+when
+    $req : MedicationRequest(
+        $patient : patient,
+        $newMed : newMedication
+    )
+    (
+        MedicationRequest(
+            newMedication.category == MedicationCategory.ANTICOAGULANT
+        ) and
+        exists Medication(category == MedicationCategory.ANTIDEPRESSANT)
+            from $patient.currentMedications
+    ) or (
+        MedicationRequest(
+            newMedication.category == MedicationCategory.ANTIDEPRESSANT
+        ) and
+        exists Medication(category == MedicationCategory.ANTICOAGULANT)
+            from $patient.currentMedications
+    )
+    $existing : Medication(
+        category == MedicationCategory.ANTIDEPRESSANT ||
+        category == MedicationCategory.ANTICOAGULANT,
+        category != $newMed.category
+    ) from $patient.currentMedications
+then
+    insert(new DetectedInteraction(
+        $patient,
+        $existing,
+        $newMed,
+        InteractionType.DRUG_DRUG,
+        SeverityLevel.MILD,
+        SeverityLevel.MILD.getScore(),
+        "Increased risk of bleeding"
+    ));
+end
+
+rule "Drug-Drug Interaction: ANTIDEPRESSANT + ANTIDEPRESSANT - row 4"
 when
     $req : MedicationRequest(
         $patient : patient,
@@ -109,7 +181,7 @@ then
     ));
 end
 
-rule "Drug-Drug Interaction: ANTIDIABETIC + ANTIBIOTIC - row 3"
+rule "Drug-Drug Interaction: ANTIDIABETIC + ANTIBIOTIC - row 5"
 when
     $req : MedicationRequest(
         $patient : patient,
@@ -145,7 +217,43 @@ then
     ));
 end
 
-rule "Drug-Drug Interaction: ANTIHYPERTENSIVE + ANTIDEPRESSANT - row 4"
+rule "Drug-Drug Interaction: ANTIBIOTIC + ANTIDIABETIC - row 6"
+when
+    $req : MedicationRequest(
+        $patient : patient,
+        $newMed : newMedication
+    )
+    (
+        MedicationRequest(
+            newMedication.category == MedicationCategory.ANTIDIABETIC
+        ) and
+        exists Medication(category == MedicationCategory.ANTIBIOTIC)
+            from $patient.currentMedications
+    ) or (
+        MedicationRequest(
+            newMedication.category == MedicationCategory.ANTIBIOTIC
+        ) and
+        exists Medication(category == MedicationCategory.ANTIDIABETIC)
+            from $patient.currentMedications
+    )
+    $existing : Medication(
+        category == MedicationCategory.ANTIBIOTIC ||
+        category == MedicationCategory.ANTIDIABETIC,
+        category != $newMed.category
+    ) from $patient.currentMedications
+then
+    insert(new DetectedInteraction(
+        $patient,
+        $existing,
+        $newMed,
+        InteractionType.DRUG_DRUG,
+        SeverityLevel.SERIOUS,
+        SeverityLevel.SERIOUS.getScore(),
+        "Antibiotics may enhance antidiabetic effect causing hypoglycemia"
+    ));
+end
+
+rule "Drug-Drug Interaction: ANTIHYPERTENSIVE + ANTIDEPRESSANT - row 7"
 when
     $req : MedicationRequest(
         $patient : patient,
@@ -181,7 +289,43 @@ then
     ));
 end
 
-rule "Drug-Drug Interaction: STATIN + ANTIBIOTIC - row 5"
+rule "Drug-Drug Interaction: ANTIDEPRESSANT + ANTIHYPERTENSIVE - row 8"
+when
+    $req : MedicationRequest(
+        $patient : patient,
+        $newMed : newMedication
+    )
+    (
+        MedicationRequest(
+            newMedication.category == MedicationCategory.ANTIHYPERTENSIVE
+        ) and
+        exists Medication(category == MedicationCategory.ANTIDEPRESSANT)
+            from $patient.currentMedications
+    ) or (
+        MedicationRequest(
+            newMedication.category == MedicationCategory.ANTIDEPRESSANT
+        ) and
+        exists Medication(category == MedicationCategory.ANTIHYPERTENSIVE)
+            from $patient.currentMedications
+    )
+    $existing : Medication(
+        category == MedicationCategory.ANTIDEPRESSANT ||
+        category == MedicationCategory.ANTIHYPERTENSIVE,
+        category != $newMed.category
+    ) from $patient.currentMedications
+then
+    insert(new DetectedInteraction(
+        $patient,
+        $existing,
+        $newMed,
+        InteractionType.DRUG_DRUG,
+        SeverityLevel.MILD,
+        SeverityLevel.MILD.getScore(),
+        "Possible drop in blood pressure"
+    ));
+end
+
+rule "Drug-Drug Interaction: STATIN + ANTIBIOTIC - row 9"
 when
     $req : MedicationRequest(
         $patient : patient,
@@ -203,6 +347,42 @@ when
     $existing : Medication(
         category == MedicationCategory.STATIN ||
         category == MedicationCategory.ANTIBIOTIC,
+        category != $newMed.category
+    ) from $patient.currentMedications
+then
+    insert(new DetectedInteraction(
+        $patient,
+        $existing,
+        $newMed,
+        InteractionType.DRUG_DRUG,
+        SeverityLevel.SERIOUS,
+        SeverityLevel.SERIOUS.getScore(),
+        "Increased risk of myopathy"
+    ));
+end
+
+rule "Drug-Drug Interaction: ANTIBIOTIC + STATIN - row 10"
+when
+    $req : MedicationRequest(
+        $patient : patient,
+        $newMed : newMedication
+    )
+    (
+        MedicationRequest(
+            newMedication.category == MedicationCategory.STATIN
+        ) and
+        exists Medication(category == MedicationCategory.ANTIBIOTIC)
+            from $patient.currentMedications
+    ) or (
+        MedicationRequest(
+            newMedication.category == MedicationCategory.ANTIBIOTIC
+        ) and
+        exists Medication(category == MedicationCategory.STATIN)
+            from $patient.currentMedications
+    )
+    $existing : Medication(
+        category == MedicationCategory.ANTIBIOTIC ||
+        category == MedicationCategory.STATIN,
         category != $newMed.category
     ) from $patient.currentMedications
 then

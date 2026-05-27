@@ -106,7 +106,7 @@
 							<goal>java</goal>
 						</goals>
 						<configuration>
-							<mainClass>com.ftn.sbnz.kjar.DrugInteractionDrlGenerator</mainClass>
+							<mainClass>com.ftn.sbnz.kjar.RuleGenerator</mainClass>
 						</configuration>
 					</execution>
 				</executions>

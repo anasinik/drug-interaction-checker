@@ -1,0 +1,24 @@
+package com.ftn.sbnz.kjar.templates;
+import com.ftn.sbnz.model.domain.*;
+
+rule "Drug-Allergy Interaction: penicillin + ANTIBIOTIC - row 0"
+when
+    $req : MedicationRequest(
+        $patient : patient,
+        $newMed : newMedication,
+        newMedication.category == MedicationCategory.ANTIBIOTIC
+    )
+    eval($patient.hasAllergy("penicillin"))
+then
+    insert(new DetectedInteraction(
+        $patient,
+        null,
+        $newMed,
+        InteractionType.DRUG_DISEASE,
+        SeverityLevel.CONTRAINDICATED,
+        SeverityLevel.CONTRAINDICATED.getScore(),
+        "Anaphylactic shock risk"
+    ));
+end
+
+
