@@ -1,0 +1,124 @@
+package com.ftn.sbnz.kjar.templates;
+import com.ftn.sbnz.model.domain.*;
+
+rule "Drug-Food Interaction: VITAMIN_K_RICH + ANTICOAGULANT - row 0"
+when
+    $req : MedicationRequest(
+        $patient : patient,
+        $newMed : newMedication,
+        newMedication.category == MedicationCategory.ANTICOAGULANT
+    )
+    eval($patient.hasFoodHabit(FoodHabit.VITAMIN_K_RICH))
+then
+    insert(new DetectedInteraction(
+        $patient,
+        null,
+        $newMed,
+        InteractionType.DRUG_FOOD,
+        SeverityLevel.MILD,
+        SeverityLevel.MILD.getScore(),
+        "Vitamin K reduces anticoagulant efficacy, may cause unwanted blood clotting"
+    ));
+end
+
+rule "Drug-Food Interaction: GRAPEFRUIT + STATIN - row 1"
+when
+    $req : MedicationRequest(
+        $patient : patient,
+        $newMed : newMedication,
+        newMedication.category == MedicationCategory.STATIN
+    )
+    eval($patient.hasFoodHabit(FoodHabit.GRAPEFRUIT))
+then
+    insert(new DetectedInteraction(
+        $patient,
+        null,
+        $newMed,
+        InteractionType.DRUG_FOOD,
+        SeverityLevel.SERIOUS,
+        SeverityLevel.SERIOUS.getScore(),
+        "Grapefruit inhibits CYP3A4 enzyme causing drug accumulation and muscle damage risk"
+    ));
+end
+
+rule "Drug-Food Interaction: GRAPEFRUIT + ANTIHYPERTENSIVE - row 2"
+when
+    $req : MedicationRequest(
+        $patient : patient,
+        $newMed : newMedication,
+        newMedication.category == MedicationCategory.ANTIHYPERTENSIVE
+    )
+    eval($patient.hasFoodHabit(FoodHabit.GRAPEFRUIT))
+then
+    insert(new DetectedInteraction(
+        $patient,
+        null,
+        $newMed,
+        InteractionType.DRUG_FOOD,
+        SeverityLevel.SERIOUS,
+        SeverityLevel.SERIOUS.getScore(),
+        "Grapefruit enhances drug effect which may cause sudden blood pressure drop"
+    ));
+end
+
+rule "Drug-Food Interaction: ALCOHOL + ANTIDIABETIC - row 3"
+when
+    $req : MedicationRequest(
+        $patient : patient,
+        $newMed : newMedication,
+        newMedication.category == MedicationCategory.ANTIDIABETIC
+    )
+    eval($patient.hasFoodHabit(FoodHabit.ALCOHOL))
+then
+    insert(new DetectedInteraction(
+        $patient,
+        null,
+        $newMed,
+        InteractionType.DRUG_FOOD,
+        SeverityLevel.SERIOUS,
+        SeverityLevel.SERIOUS.getScore(),
+        "Alcohol enhances antidiabetic effect and may cause severe hypoglycemia"
+    ));
+end
+
+rule "Drug-Food Interaction: ALCOHOL + ANTIDEPRESSANT - row 4"
+when
+    $req : MedicationRequest(
+        $patient : patient,
+        $newMed : newMedication,
+        newMedication.category == MedicationCategory.ANTIDEPRESSANT
+    )
+    eval($patient.hasFoodHabit(FoodHabit.ALCOHOL))
+then
+    insert(new DetectedInteraction(
+        $patient,
+        null,
+        $newMed,
+        InteractionType.DRUG_FOOD,
+        SeverityLevel.SERIOUS,
+        SeverityLevel.SERIOUS.getScore(),
+        "Alcohol enhances sedative effect and may cause central nervous system depression"
+    ));
+end
+
+rule "Drug-Food Interaction: ALCOHOL + ANTIBIOTIC - row 5"
+when
+    $req : MedicationRequest(
+        $patient : patient,
+        $newMed : newMedication,
+        newMedication.category == MedicationCategory.ANTIBIOTIC
+    )
+    eval($patient.hasFoodHabit(FoodHabit.ALCOHOL))
+then
+    insert(new DetectedInteraction(
+        $patient,
+        null,
+        $newMed,
+        InteractionType.DRUG_FOOD,
+        SeverityLevel.CONTRAINDICATED,
+        SeverityLevel.CONTRAINDICATED.getScore(),
+        "Combination causes severe side effects such as nausea, vomiting and rapid heart rate"
+    ));
+end
+
+

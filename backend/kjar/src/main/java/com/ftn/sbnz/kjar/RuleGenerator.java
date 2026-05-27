@@ -11,6 +11,7 @@ public class RuleGenerator {
                 generateDrugDiseaseInteractions();
                 generateDrugDiseaseByNameInteractions();
                 generateDrugAllergyInteractions();
+                generateDrugFoodInteractions();
         }
 
         private static void generateDrugDrugInteractions() throws IOException {
@@ -61,6 +62,25 @@ public class RuleGenerator {
                                 data);
         }
 
+        private static void generateDrugFoodInteractions() throws IOException {
+                List<Map<String, Object>> data = List.of(
+                                rowFood("VITAMIN_K_RICH", "ANTICOAGULANT", "MILD",
+                                                "Vitamin K reduces anticoagulant efficacy, may cause unwanted blood clotting"),
+                                rowFood("GRAPEFRUIT", "STATIN", "SERIOUS",
+                                                "Grapefruit inhibits CYP3A4 enzyme causing drug accumulation and muscle damage risk"),
+                                rowFood("GRAPEFRUIT", "ANTIHYPERTENSIVE", "SERIOUS",
+                                                "Grapefruit enhances drug effect which may cause sudden blood pressure drop"),
+                                rowFood("ALCOHOL", "ANTIDIABETIC", "SERIOUS",
+                                                "Alcohol enhances antidiabetic effect and may cause severe hypoglycemia"),
+                                rowFood("ALCOHOL", "ANTIDEPRESSANT", "SERIOUS",
+                                                "Alcohol enhances sedative effect and may cause central nervous system depression"),
+                                rowFood("ALCOHOL", "ANTIBIOTIC", "CONTRAINDICATED",
+                                                "Combination causes severe side effects such as nausea, vomiting and rapid heart rate"));
+                generate("src/main/resources/templates/drug_food_interaction.drt",
+                                "src/main/resources/rules/drug_food_interactions.drl",
+                                data);
+        }
+
         private static void generate(String templatePath, String outputPath,
                         List<Map<String, Object>> data) throws IOException {
                 ObjectDataCompiler compiler = new ObjectDataCompiler();
@@ -92,6 +112,12 @@ public class RuleGenerator {
         private static Map<String, Object> rowAllergy(String allergy, String category,
                         String severity, String reason) {
                 return Map.of("allergyName", allergy, "medicationCategory", category,
+                                "severity", severity, "reason", reason);
+        }
+
+        private static Map<String, Object> rowFood(String food, String category,
+                        String severity, String reason) {
+                return Map.of("foodHabit", food, "medicationCategory", category,
                                 "severity", severity, "reason", reason);
         }
 }
