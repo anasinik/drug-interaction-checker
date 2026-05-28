@@ -1,0 +1,70 @@
+package com.ftn.sbnz.kjar.rules;
+
+import com.ftn.sbnz.model.domain.*;
+
+query "isContraindicatedViaChain"(String $drug, String $condition, String $chain)
+    (
+        ContraindicatedWith(medicationName == $drug, condition == $condition)
+        and
+        $chain := String() from $condition
+    )
+    or
+    (
+        Worsens(cause == $condition, $next : effect)
+        and
+        eval(!$next.equals($condition))
+        and
+        isContraindicatedViaChain($drug, $next, $subChain ;)
+        and
+        eval(!$subChain.contains($condition))
+        and
+        $chain := String() from ($condition + " -> " + $subChain)
+    )
+end
+
+
+query "explainSeverity"(String $factor, String $finalEffect, String $chain)
+    (
+        RiskMechanism(cause == $factor, effect == $finalEffect)
+        and
+        RiskClassification(condition == $finalEffect)
+        and
+        $chain := String() from ($factor + " -> " + $finalEffect)
+    )
+    or
+    (
+        RiskMechanism(cause == $factor, $next : effect)
+        and
+        eval(!$next.equals($factor))
+        and
+        not RiskClassification(condition == $factor)
+        and
+        explainSeverity($next, $finalEffect, $subChain ;)
+        and
+        eval(!$subChain.contains($factor))
+        and
+        $chain := String() from ($factor + " -> " + $subChain)
+    )
+end
+
+rule "Explain contraindication via causal chain"
+    no-loop true
+when
+    $req : ExplanationRequest($patient : patient, $drug : medicationName)
+    $diagnosis : String() from $patient.getDiagnoses()
+    isContraindicatedViaChain($drug, $diagnosis, $chain ;)
+    not ContraindicationExplanation(medicationName == $drug, diagnosis == $diagnosis)
+then
+    insert(new ContraindicationExplanation($drug, $diagnosis, $chain));
+end
+
+rule "Explain interaction severity via causal chain"
+    no-loop true
+when
+    $req : SeverityExplanationRequest($factor : factor, $medication : medication)
+    explainSeverity($factor, $finalEffect, $chain ;)
+    $classification : RiskClassification(condition == $finalEffect, $riskLevel : riskLevel)
+    not InteractionSeverityExplanation(factor == $factor, medication == $medication)
+then
+    insert(new InteractionSeverityExplanation($factor, $medication, $chain, $riskLevel));
+end

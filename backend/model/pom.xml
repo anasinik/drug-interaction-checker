@@ -54,6 +54,12 @@
 			<version>1.18.32</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.kie</groupId>
+			<artifactId>kie-api</artifactId>
+			<version>7.73.0.Final</version>
+		</dependency>
 	</dependencies>
 
 	<build>
