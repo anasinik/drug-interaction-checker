@@ -1,4 +1,4 @@
-package com.ftn.sbnz.kjar.templates;
+package com.ftn.sbnz.kjar.rules;
 import com.ftn.sbnz.model.domain.*;
 
 rule "Drug-Drug Interaction: ANTICOAGULANT + ANTIBIOTIC - row 0"

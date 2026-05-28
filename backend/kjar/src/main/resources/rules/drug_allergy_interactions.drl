@@ -1,4 +1,4 @@
-package com.ftn.sbnz.kjar.templates;
+package com.ftn.sbnz.kjar.rules;
 import com.ftn.sbnz.model.domain.*;
 
 rule "Drug-Allergy Interaction: penicillin + ANTIBIOTIC - row 0"

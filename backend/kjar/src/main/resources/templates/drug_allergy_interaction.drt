@@ -4,7 +4,7 @@ medicationCategory
 severity
 reason
 
-package com.ftn.sbnz.kjar.templates;
+package com.ftn.sbnz.kjar.rules;
 import com.ftn.sbnz.model.domain.*;
 
 template "drug-allergy-interaction"
