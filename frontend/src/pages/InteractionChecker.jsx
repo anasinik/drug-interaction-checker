@@ -76,12 +76,6 @@ export default function InteractionChecker() {
         return true
       })
 
-      console.log("=== TEST RESULT ===")
-      console.log("Patient:", selectedPatient.name, "(ID:", selectedPatient.id + ")")
-      console.log("Medication:", selectedMed?.name, "(ID:", selectedMedId + ")")
-      console.log("Safety Report:", JSON.stringify(report, null, 2))
-      console.log("Interactions:", JSON.stringify(deduplicated, null, 2))
-      console.log("===================")
 
       setSafetyReport(report)
       setInteractions(deduplicated)

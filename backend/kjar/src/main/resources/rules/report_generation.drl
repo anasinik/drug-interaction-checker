@@ -17,6 +17,21 @@ then
         "Review the therapy immediately, adjust the medication list, and consult a specialist."));
 end
 
+rule "Report serious therapy"
+salience 10
+when
+    $request : MedicationRequest( $patient : patient )
+    exists DetectedInteraction( patient == $patient, severity == SeverityLevel.SERIOUS )
+    not DetectedInteraction( patient == $patient, severity == SeverityLevel.CONTRAINDICATED )
+    not SafetyReport( patient == $patient )
+then
+    insert(new SafetyReport(
+        $patient,
+        SeverityLevel.SERIOUS,
+        "One or more serious interactions detected.",
+        "Consider alternative drugs or dosage changes and monitor the patient closely."));
+end
+
 rule "Report high-risk therapy"
 salience 10
 when
@@ -34,7 +49,6 @@ rule "Report default safe therapy"
 salience 0
 when
     $request : MedicationRequest( $patient : patient )
-    not DetectedInteraction( patient == $patient )
     not SafetyReport( patient == $patient )
 then
     insert(new SafetyReport(

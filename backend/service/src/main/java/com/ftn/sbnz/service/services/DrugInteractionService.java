@@ -12,6 +12,7 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,10 +43,13 @@ public class DrugInteractionService {
                         session.insert(request);
                         session.fireAllRules();
 
-                        return session.getObjects(obj -> obj instanceof SafetyReport)
+                        List<SafetyReport> reports = session.getObjects(obj -> obj instanceof SafetyReport)
                                         .stream()
                                         .map(r -> (SafetyReport) r)
-                                        .findFirst()
+                                        .collect(Collectors.toList());
+
+                        return reports.stream()
+                                        .max(Comparator.comparingInt(r -> r.getHighestSeverity().getScore()))
                                         .orElse(null);
                 } finally {
                         session.dispose();

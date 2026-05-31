@@ -27,15 +27,7 @@ public class DrugInteractionController {
         dto.setPatientId(patientId);
         dto.setMedicationId(medicationId);
 
-        SafetyReport report = drugInteractionService.checkInteractions(dto);
-        if (report == null) {
-            SafetyReport safe = new SafetyReport();
-            safe.setHighestSeverity(SeverityLevel.MILD);
-            safe.setSummary("No significant interactions detected.");
-            safe.setRecommendation("Medication can be dispensed safely.");
-            return ResponseEntity.ok(safe);
-        }
-        return ResponseEntity.ok(report);
+        return ResponseEntity.ok(drugInteractionService.checkInteractions(dto));
     }
 
     @GetMapping
