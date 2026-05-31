@@ -9,10 +9,13 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 import lombok.Data;
@@ -30,8 +33,11 @@ public class PatientProfile {
   private int age;
   private double weightKg;
 
-  @ElementCollection
-  @CollectionTable(name = "patient_medications", joinColumns = @JoinColumn(name = "patient_id"))
+  @Column(unique = true, length = 13)
+  private String jmbg;
+
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(name = "patient_medications", joinColumns = @JoinColumn(name = "patient_id"), inverseJoinColumns = @JoinColumn(name = "medication_id"))
   private List<Medication> currentMedications;
 
   @ElementCollection
