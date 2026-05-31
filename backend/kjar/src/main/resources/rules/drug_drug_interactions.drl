@@ -23,7 +23,7 @@ when
     $existing : Medication(
         category == MedicationCategory.ANTICOAGULANT ||
         category == MedicationCategory.ANTIBIOTIC,
-        category != $newMed.category
+        (category != $newMed.category || MedicationCategory.ANTICOAGULANT == MedicationCategory.ANTIBIOTIC)
     ) from $patient.currentMedications
 then
     insert(new DetectedInteraction(
@@ -59,7 +59,7 @@ when
     $existing : Medication(
         category == MedicationCategory.ANTICOAGULANT ||
         category == MedicationCategory.ANTIDEPRESSANT,
-        category != $newMed.category
+        (category != $newMed.category || MedicationCategory.ANTICOAGULANT == MedicationCategory.ANTIDEPRESSANT)
     ) from $patient.currentMedications
 then
     insert(new DetectedInteraction(
@@ -95,7 +95,7 @@ when
     $existing : Medication(
         category == MedicationCategory.ANTIDEPRESSANT ||
         category == MedicationCategory.ANTIDEPRESSANT,
-        category != $newMed.category
+        (category != $newMed.category || MedicationCategory.ANTIDEPRESSANT == MedicationCategory.ANTIDEPRESSANT)
     ) from $patient.currentMedications
 then
     insert(new DetectedInteraction(
@@ -131,7 +131,7 @@ when
     $existing : Medication(
         category == MedicationCategory.ANTIDIABETIC ||
         category == MedicationCategory.ANTIBIOTIC,
-        category != $newMed.category
+        (category != $newMed.category || MedicationCategory.ANTIDIABETIC == MedicationCategory.ANTIBIOTIC)
     ) from $patient.currentMedications
 then
     insert(new DetectedInteraction(
@@ -167,7 +167,7 @@ when
     $existing : Medication(
         category == MedicationCategory.ANTIHYPERTENSIVE ||
         category == MedicationCategory.ANTIDEPRESSANT,
-        category != $newMed.category
+        (category != $newMed.category || MedicationCategory.ANTIHYPERTENSIVE == MedicationCategory.ANTIDEPRESSANT)
     ) from $patient.currentMedications
 then
     insert(new DetectedInteraction(
@@ -203,7 +203,7 @@ when
     $existing : Medication(
         category == MedicationCategory.STATIN ||
         category == MedicationCategory.ANTIBIOTIC,
-        category != $newMed.category
+        (category != $newMed.category || MedicationCategory.STATIN == MedicationCategory.ANTIBIOTIC)
     ) from $patient.currentMedications
 then
     insert(new DetectedInteraction(

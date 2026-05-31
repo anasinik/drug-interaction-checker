@@ -30,7 +30,7 @@ when
     $existing : Medication(
         category == MedicationCategory.@{categoryA} ||
         category == MedicationCategory.@{categoryB},
-        category != $newMed.category
+        (category != $newMed.category || MedicationCategory.@{categoryA} == MedicationCategory.@{categoryB})
     ) from $patient.currentMedications
 then
     insert(new DetectedInteraction(
