@@ -65,8 +65,27 @@ export default function InteractionChecker() {
         api.checkInteractions(selectedPatient.id, selectedMedId),
         api.getDetectedInteractions(selectedPatient.id, selectedMedId),
       ])
+
+
+
+      const seen = new Set()
+      const deduplicated = detected.filter(i => {
+        const key = `${i.newMedication?.id}-${i.existingMedication?.id ?? "null"}-${i.interactionType}-${i.severity}`
+        if (seen.has(key)) return false
+        seen.add(key)
+        return true
+      })
+
+      console.log("=== TEST RESULT ===")
+      console.log("Patient:", selectedPatient.name, "(ID:", selectedPatient.id + ")")
+      console.log("Medication:", selectedMed?.name, "(ID:", selectedMedId + ")")
+      console.log("Safety Report:", JSON.stringify(report, null, 2))
+      console.log("Interactions:", JSON.stringify(deduplicated, null, 2))
+      console.log("===================")
+
       setSafetyReport(report)
-      setInteractions(detected)
+      setInteractions(deduplicated)
+
     } catch {
       setError("Could not connect to the server. Make sure the backend is running.")
     } finally {
