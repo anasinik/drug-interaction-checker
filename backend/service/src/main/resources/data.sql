@@ -1,31 +1,56 @@
-INSERT INTO patient (id, name, age, weight_kg) VALUES (1, 'Milan Markovic', 45, 78.5);
-INSERT INTO patient (id, name, age, weight_kg) VALUES (2, 'Jelena Jovic', 31, 62.0);
-INSERT INTO patient (id, name, age, weight_kg) VALUES (3, 'Nikola Petrovic', 59, 88.2);
-INSERT INTO patient (id, name, age, weight_kg) VALUES (4, 'Ana Ilic', 27, 55.4);
-INSERT INTO patient (id, name, age, weight_kg) VALUES (5, 'Marko Nikolic', 70, 81.1);
-INSERT INTO patient (id, name, age, weight_kg) VALUES (6, 'Marija Kostic', 52, 68.9);
-INSERT INTO patient (id, name, age, weight_kg) VALUES (7, 'Ivan Todorovic', 38, 74.3);
-INSERT INTO patient (id, name, age, weight_kg) VALUES (8, 'Sanja Dimitrijevic', 48, 70.0);
-INSERT INTO patient (id, name, age, weight_kg) VALUES (9, 'Petar Radovic', 64, 93.7);
-INSERT INTO patient (id, name, age, weight_kg) VALUES (10, 'Tanja Lalic', 29, 59.2);
+-- ── Medications ───────────────────────────────────────────────────────────────
+INSERT INTO medication (id, name, category, renally_cleared, hepatically_metabolized) VALUES
+    (1,  'Warfarin',      'ANTICOAGULANT',    true,  false),
+    (2,  'Heparin',       'ANTICOAGULANT',    true,  false),
+    (3,  'Erythromycin',  'ANTIBIOTIC',       false, true),
+    (4,  'Amoxicillin',   'ANTIBIOTIC',       true,  false),
+    (5,  'Metronidazole', 'ANTIBIOTIC',       false, true),
+    (6,  'Simvastatin',   'STATIN',           false, true),
+    (7,  'Atorvastatin',  'STATIN',           false, true),
+    (8,  'Aspirin',       'OTHER',            false, false),
+    (9,  'Ibuprofen',     'OTHER',            false, true),
+    (10, 'Amitriptyline', 'ANTIDEPRESSANT',   false, true),
+    (11, 'Sertraline',    'ANTIDEPRESSANT',   false, true),
+    (12, 'Metformin',     'ANTIDIABETIC',     true,  false),
+    (13, 'Amlodipine',    'ANTIHYPERTENSIVE', false, true);
 
-INSERT INTO patient_diagnoses (patient_id, diagnosis) VALUES (1, 'hypertension');
-INSERT INTO patient_diagnoses (patient_id, diagnosis) VALUES (2, 'diabetes');
-INSERT INTO patient_diagnoses (patient_id, diagnosis) VALUES (3, 'osteoporosis');
-INSERT INTO patient_diagnoses (patient_id, diagnosis) VALUES (5, 'asthma');
-INSERT INTO patient_diagnoses (patient_id, diagnosis) VALUES (7, 'hyperlipidemia');
+-- ── Patients ──────────────────────────────────────────────────────────────────
+INSERT INTO patient (id, name, age, weight_kg, jmbg) VALUES
+    (1, 'Marko Marković',   68, 84.0, '1502956710023'),
+    (2, 'Ana Popović',      45, 62.0, '2203978740051'),
+    (3, 'Nikola Jovanović', 34, 78.0, '0607990710187'),
+    (4, 'Jelena Nikolić',   72, 70.5, '1409952755034'),
+    (5, 'Stefan Petrović',  58, 91.0, '2211965710099');
 
-INSERT INTO patient_allergies (patient_id, allergy) VALUES (2, 'penicillin');
-INSERT INTO patient_allergies (patient_id, allergy) VALUES (4, 'pollen');
-INSERT INTO patient_allergies (patient_id, allergy) VALUES (9, 'shellfish');
+-- ── Patient medications ───────────────────────────────────────────────────────
+-- Marko: Warfarin + Metformin
+INSERT INTO patient_medications (patient_id, medication_id) VALUES (1, 1), (1, 12);
+-- Ana: Atorvastatin + Amlodipine
+INSERT INTO patient_medications (patient_id, medication_id) VALUES (2, 7), (2, 13);
+-- Nikola: Sertraline
+INSERT INTO patient_medications (patient_id, medication_id) VALUES (3, 11);
+-- Jelena: Warfarin + Amlodipine + Metformin + Atorvastatin + Sertraline
+INSERT INTO patient_medications (patient_id, medication_id) VALUES (4, 1), (4, 13), (4, 12), (4, 7), (4, 11);
+-- Stefan: Warfarin + Atorvastatin
+INSERT INTO patient_medications (patient_id, medication_id) VALUES (5, 1), (5, 7);
 
-INSERT INTO patient_food_habits (patient_id, food_habit) VALUES (1, 'ALCOHOL');
-INSERT INTO patient_food_habits (patient_id, food_habit) VALUES (3, 'GRAPEFRUIT');
-INSERT INTO patient_food_habits (patient_id, food_habit) VALUES (6, 'VITAMIN_K_RICH');
-INSERT INTO patient_food_habits (patient_id, food_habit) VALUES (8, 'NONE');
+-- ── Diagnoses ─────────────────────────────────────────────────────────────────
+INSERT INTO patient_diagnoses (patient_id, diagnosis) VALUES
+    (1, 'Renal insufficiency'),
+    (2, 'Hypertension'),
+    (4, 'Renal insufficiency'),
+    (4, 'Liver disease'),
+    (5, 'Liver disease');
 
-INSERT INTO patient_medications (patient_id, name, category, renally_cleared, hepatically_metabolized) VALUES (1, 'Aspirin', 'OTHER', FALSE, TRUE);
-INSERT INTO patient_medications (patient_id, name, category, renally_cleared, hepatically_metabolized) VALUES (2, 'Metformin', 'ANTIDIABETIC', TRUE, FALSE);
-INSERT INTO patient_medications (patient_id, name, category, renally_cleared, hepatically_metabolized) VALUES (3, 'Omeprazole', 'OTHER', FALSE, TRUE);
-INSERT INTO patient_medications (patient_id, name, category, renally_cleared, hepatically_metabolized) VALUES (5, 'Salbutamol', 'OTHER', FALSE, FALSE);
-INSERT INTO patient_medications (patient_id, name, category, renally_cleared, hepatically_metabolized) VALUES (7, 'Atorvastatin', 'STATIN', TRUE, FALSE);
+-- ── Allergies ─────────────────────────────────────────────────────────────────
+INSERT INTO patient_allergies (patient_id, allergy) VALUES
+    (2, 'Penicillin'),
+    (3, 'Aspirin');
+
+-- ── Food habits ───────────────────────────────────────────────────────────────
+INSERT INTO patient_food_habits (patient_id, food_habit) VALUES
+    (1, 'ALCOHOL'),
+    (2, 'GRAPEFRUIT'),
+    (3, 'ALCOHOL'),
+    (4, 'VITAMIN_K_RICH'),
+    (5, 'GRAPEFRUIT');
