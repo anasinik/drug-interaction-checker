@@ -83,8 +83,22 @@ public class DrugInteractionService {
                 KieSession session = kieContainer.newKieSession();
                 try {
                         causalFactsInitializer.insertFacts(session);
+
                         session.insert(new ExplanationRequest(patient, medicationName));
+
                         session.fireAllRules();
+
+                        session.getObjects().forEach(
+                                        obj -> System.out.println(obj.getClass().getSimpleName() + ": " + obj));
+
+                        List<ContraindicationExplanation> explanations = session
+                                        .getObjects(obj -> obj instanceof ContraindicationExplanation)
+                                        .stream()
+                                        .map(obj -> (ContraindicationExplanation) obj)
+                                        .collect(Collectors.toList());
+
+                        System.out.println("ContraindicationExplanation count: " + explanations.size() + " ===");
+                        explanations.forEach(e -> System.out.println("  -> " + e));
 
                         return session.getObjects(obj -> obj instanceof ContraindicationExplanation)
                                         .stream()

@@ -16,6 +16,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.PostLoad;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 import lombok.Data;
@@ -64,8 +67,7 @@ public class PatientProfile {
   }
 
   public PatientProfile(String name, int age, double weightKg, List<Medication> currentMedications,
-      List<String> diagnoses,
-      List<String> allergies, List<FoodHabit> foodHabits) {
+      List<String> diagnoses, List<String> allergies, List<FoodHabit> foodHabits) {
     this.name = name;
     this.age = age;
     this.weightKg = weightKg;
@@ -73,6 +75,16 @@ public class PatientProfile {
     this.diagnoses = diagnoses != null ? diagnoses : new ArrayList<>();
     this.allergies = allergies != null ? allergies : new ArrayList<>();
     this.foodHabits = foodHabits != null ? foodHabits : new ArrayList<>();
+  }
+
+  @PostLoad
+  @PrePersist
+  @PreUpdate
+  private void normalizeStringFields() {
+    if (diagnoses != null)
+      diagnoses.replaceAll(d -> d.toLowerCase().trim());
+    if (allergies != null)
+      allergies.replaceAll(a -> a.toLowerCase().trim());
   }
 
   public void setCurrentMedications(List<Medication> currentMedications) {
@@ -102,7 +114,6 @@ public class PatientProfile {
   public boolean hasMedicationByCategory(MedicationCategory category) {
     if (currentMedications == null || category == null)
       return false;
-
     return currentMedications.stream()
         .anyMatch(med -> med.getCategory() == category);
   }
@@ -110,7 +121,6 @@ public class PatientProfile {
   public Medication findMedicationByCategory(MedicationCategory category) {
     if (currentMedications == null || category == null)
       return null;
-
     return currentMedications.stream()
         .filter(med -> med.getCategory() == category)
         .findFirst()
@@ -134,31 +144,25 @@ public class PatientProfile {
   public void addMedication(Medication medication) {
     if (medication == null)
       return;
-
     if (currentMedications == null)
       currentMedications = new ArrayList<>();
-
     currentMedications.add(medication);
   }
 
   public void addDiagnosis(String diagnosis) {
     if (diagnosis == null || diagnosis.isBlank())
       return;
-
     if (diagnoses == null)
       diagnoses = new ArrayList<>();
-
-    diagnoses.add(diagnosis);
+    diagnoses.add(diagnosis.toLowerCase().trim());
   }
 
   public void addAllergy(String allergy) {
     if (allergy == null || allergy.isBlank())
       return;
-
     if (allergies == null)
       allergies = new ArrayList<>();
-
-    allergies.add(allergy);
+    allergies.add(allergy.toLowerCase().trim());
   }
 
   public void addFoodHabit(FoodHabit habit) {
@@ -169,5 +173,4 @@ public class PatientProfile {
     if (!foodHabits.contains(habit))
       foodHabits.add(habit);
   }
-
 }
