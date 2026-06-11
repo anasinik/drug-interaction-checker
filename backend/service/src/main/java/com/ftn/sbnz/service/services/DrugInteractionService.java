@@ -108,4 +108,20 @@ public class DrugInteractionService {
                         session.dispose();
                 }
         }
+
+        public List<InteractionSeverityExplanation> explainSeverity(String factor, String medicationName) {
+                KieSession session = kieContainer.newKieSession();
+                try {
+                        causalFactsInitializer.insertFacts(session);
+                        session.insert(new SeverityExplanationRequest(factor, medicationName));
+                        session.fireAllRules();
+
+                        return session.getObjects(obj -> obj instanceof InteractionSeverityExplanation)
+                                        .stream()
+                                        .map(obj -> (InteractionSeverityExplanation) obj)
+                                        .collect(Collectors.toList());
+                } finally {
+                        session.dispose();
+                }
+        }
 }

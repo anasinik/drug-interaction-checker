@@ -3,6 +3,7 @@ categoryA
 categoryB
 severity
 reason
+factor
 
 package com.ftn.sbnz.kjar.rules;
 import com.ftn.sbnz.model.domain.*;
@@ -40,7 +41,8 @@ then
         InteractionType.DRUG_DRUG,
         SeverityLevel.@{severity},
         SeverityLevel.@{severity}.getScore(),
-        "@{reason}"
+        "@{reason}",
+        "@{factor}"
     ));
 end
 

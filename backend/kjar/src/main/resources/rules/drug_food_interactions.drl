@@ -15,9 +15,10 @@ then
         null,
         $newMed,
         InteractionType.DRUG_FOOD,
-        SeverityLevel.MILD,
-        SeverityLevel.MILD.getScore(),
-        "Vitamin K reduces anticoagulant efficacy, may cause unwanted blood clotting"
+        SeverityLevel.SERIOUS,
+        SeverityLevel.SERIOUS.getScore(),
+        "Vitamin K reduces anticoagulant efficacy, may cause unwanted blood clotting",
+        "vitamin k rich food"
     ));
 end
 
@@ -37,7 +38,8 @@ then
         InteractionType.DRUG_FOOD,
         SeverityLevel.SERIOUS,
         SeverityLevel.SERIOUS.getScore(),
-        "Grapefruit inhibits CYP3A4 enzyme causing drug accumulation and muscle damage risk"
+        "Grapefruit inhibits CYP3A4 enzyme causing drug accumulation and muscle damage risk",
+        "grapefruit"
     ));
 end
 
@@ -57,7 +59,8 @@ then
         InteractionType.DRUG_FOOD,
         SeverityLevel.SERIOUS,
         SeverityLevel.SERIOUS.getScore(),
-        "Grapefruit enhances drug effect which may cause sudden blood pressure drop"
+        "Grapefruit enhances drug effect which may cause sudden blood pressure drop",
+        "grapefruit"
     ));
 end
 
@@ -77,7 +80,8 @@ then
         InteractionType.DRUG_FOOD,
         SeverityLevel.SERIOUS,
         SeverityLevel.SERIOUS.getScore(),
-        "Alcohol enhances antidiabetic effect and may cause severe hypoglycemia"
+        "Alcohol enhances antidiabetic effect and may cause severe hypoglycemia",
+        "alcohol consumption"
     ));
 end
 
@@ -97,7 +101,8 @@ then
         InteractionType.DRUG_FOOD,
         SeverityLevel.SERIOUS,
         SeverityLevel.SERIOUS.getScore(),
-        "Alcohol enhances sedative effect and may cause central nervous system depression"
+        "Alcohol enhances sedative effect and may cause central nervous system depression",
+        "alcohol consumption"
     ));
 end
 
@@ -117,7 +122,8 @@ then
         InteractionType.DRUG_FOOD,
         SeverityLevel.CONTRAINDICATED,
         SeverityLevel.CONTRAINDICATED.getScore(),
-        "Combination causes severe side effects such as nausea, vomiting and rapid heart rate"
+        "Combination causes severe side effects such as nausea, vomiting and rapid heart rate",
+        "alcohol consumption"
     ));
 end
 

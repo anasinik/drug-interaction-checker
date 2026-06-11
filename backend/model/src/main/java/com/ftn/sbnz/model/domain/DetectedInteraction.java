@@ -16,4 +16,5 @@ public class DetectedInteraction {
   private SeverityLevel severity;
   private int score;
   private String reason;
+  private String factor;
 }

@@ -33,7 +33,8 @@ then
         InteractionType.DRUG_DRUG,
         SeverityLevel.SERIOUS,
         SeverityLevel.SERIOUS.getScore(),
-        "Antibiotics reduce vitamin K-producing bacteria..."
+        "Antibiotics reduce vitamin K-producing bacteria...",
+        "ANTICOAGULANT"
     ));
 end
 
@@ -69,7 +70,8 @@ then
         InteractionType.DRUG_DRUG,
         SeverityLevel.MILD,
         SeverityLevel.MILD.getScore(),
-        "Increased risk of bleeding"
+        "Increased risk of bleeding",
+        "ANTICOAGULANT"
     ));
 end
 
@@ -105,7 +107,8 @@ then
         InteractionType.DRUG_DRUG,
         SeverityLevel.CONTRAINDICATED,
         SeverityLevel.CONTRAINDICATED.getScore(),
-        "Risk of serotonin syndrome"
+        "Risk of serotonin syndrome",
+        "ANTIDEPRESSANT"
     ));
 end
 
@@ -141,7 +144,8 @@ then
         InteractionType.DRUG_DRUG,
         SeverityLevel.SERIOUS,
         SeverityLevel.SERIOUS.getScore(),
-        "Antibiotics may enhance antidiabetic effect causing hypoglycemia"
+        "Antibiotics may enhance antidiabetic effect causing hypoglycemia",
+        "ANTIDIABETIC"
     ));
 end
 
@@ -177,7 +181,8 @@ then
         InteractionType.DRUG_DRUG,
         SeverityLevel.MILD,
         SeverityLevel.MILD.getScore(),
-        "Possible drop in blood pressure"
+        "Possible drop in blood pressure",
+        "ANTIHYPERTENSIVE"
     ));
 end
 
@@ -213,7 +218,8 @@ then
         InteractionType.DRUG_DRUG,
         SeverityLevel.SERIOUS,
         SeverityLevel.SERIOUS.getScore(),
-        "Increased risk of myopathy"
+        "Increased risk of myopathy",
+        "STATIN"
     ));
 end
 

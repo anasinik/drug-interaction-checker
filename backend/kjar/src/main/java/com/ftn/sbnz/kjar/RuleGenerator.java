@@ -64,7 +64,7 @@ public class RuleGenerator {
 
         private static void generateDrugFoodInteractions() throws IOException {
                 List<Map<String, Object>> data = List.of(
-                                rowFood("VITAMIN_K_RICH", "ANTICOAGULANT", "MILD",
+                                rowFood("VITAMIN_K_RICH", "ANTICOAGULANT", "SERIOUS",
                                                 "Vitamin K reduces anticoagulant efficacy, may cause unwanted blood clotting"),
                                 rowFood("GRAPEFRUIT", "STATIN", "SERIOUS",
                                                 "Grapefruit inhibits CYP3A4 enzyme causing drug accumulation and muscle damage risk"),
@@ -93,31 +93,34 @@ public class RuleGenerator {
                 }
         }
 
-        private static Map<String, Object> row2(String a, String b, String severity, String reason) {
-                return Map.of("categoryA", a, "categoryB", b, "severity", severity, "reason", reason);
-        }
-
-        private static Map<String, Object> rowDisease(String category, String diagnosis,
-                        String severity, String reason) {
-                return Map.of("medicationCategory", category, "diagnosis", diagnosis,
-                                "severity", severity, "reason", reason);
-        }
-
-        private static Map<String, Object> rowByName(String name, String diagnosis,
-                        String severity, String reason) {
-                return Map.of("medicationName", name, "diagnosis", diagnosis,
-                                "severity", severity, "reason", reason);
-        }
-
-        private static Map<String, Object> rowAllergy(String allergy, String category,
-                        String severity, String reason) {
-                return Map.of("allergyName", allergy, "medicationCategory", category,
-                                "severity", severity, "reason", reason);
-        }
-
-        private static Map<String, Object> rowFood(String food, String category,
-                        String severity, String reason) {
+        private static Map<String, Object> rowFood(String food, String category, String severity, String reason) {
+                String factor = switch (food) {
+                        case "GRAPEFRUIT" -> "grapefruit";
+                        case "ALCOHOL" -> "alcohol consumption";
+                        case "VITAMIN_K_RICH" -> "vitamin k rich food";
+                        default -> food.toLowerCase();
+                };
                 return Map.of("foodHabit", food, "medicationCategory", category,
-                                "severity", severity, "reason", reason);
+                                "severity", severity, "reason", reason, "factor", factor);
+        }
+
+        private static Map<String, Object> rowDisease(String category, String diagnosis, String severity,
+                        String reason) {
+                return Map.of("medicationCategory", category, "diagnosis", diagnosis,
+                                "severity", severity, "reason", reason, "factor", diagnosis);
+        }
+
+        private static Map<String, Object> rowByName(String name, String diagnosis, String severity, String reason) {
+                return Map.of("medicationName", name, "diagnosis", diagnosis,
+                                "severity", severity, "reason", reason, "factor", diagnosis);
+        }
+
+        private static Map<String, Object> rowAllergy(String allergy, String category, String severity, String reason) {
+                return Map.of("allergyName", allergy, "medicationCategory", category,
+                                "severity", severity, "reason", reason, "factor", allergy);
+        }
+
+        private static Map<String, Object> row2(String a, String b, String severity, String reason) {
+                return Map.of("categoryA", a, "categoryB", b, "severity", severity, "reason", reason, "factor", a);
         }
 }

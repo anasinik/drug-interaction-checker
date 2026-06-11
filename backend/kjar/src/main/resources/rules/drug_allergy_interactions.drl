@@ -17,7 +17,8 @@ then
         InteractionType.DRUG_DISEASE,
         SeverityLevel.CONTRAINDICATED,
         SeverityLevel.CONTRAINDICATED.getScore(),
-        "Anaphylactic shock risk"
+        "Anaphylactic shock risk",
+        "penicillin"
     ));
 end
 

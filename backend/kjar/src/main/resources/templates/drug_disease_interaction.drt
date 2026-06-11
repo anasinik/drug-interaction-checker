@@ -3,6 +3,7 @@ medicationCategory
 diagnosis
 severity
 reason
+factor
 
 package com.ftn.sbnz.kjar.rules;
 import com.ftn.sbnz.model.domain.*;
@@ -25,7 +26,8 @@ then
         InteractionType.DRUG_DISEASE,
         SeverityLevel.@{severity},
         SeverityLevel.@{severity}.getScore(),
-        "@{reason}"
+        "@{reason}",
+        "@{factor}"
     ));
 end
 

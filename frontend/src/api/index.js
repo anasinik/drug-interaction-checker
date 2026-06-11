@@ -19,3 +19,6 @@ export const getDetectedInteractions = (patientId, medicationId) =>
 
 export const explainContraindication = (patientId, medicationName) =>
   get(`/interactions/contraindication-explanations?patientId=${patientId}&medicationName=${encodeURIComponent(medicationName)}`)
+
+export const explainSeverity = (factor, medicationName) =>
+  get(`/interactions/severity-explanation?factor=${encodeURIComponent(factor)}&medicationName=${encodeURIComponent(medicationName)}`)

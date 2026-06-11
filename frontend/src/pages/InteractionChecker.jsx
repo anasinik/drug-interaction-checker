@@ -6,6 +6,7 @@ import PatientDetail from "../components/PatientDetail"
 import SafetyReport from "../components/SafetyReport"
 import InteractionList from "../components/InteractionList"
 import ContraindicationExplanation from "../components/ContraindicationExplanation"
+import SeverityExplanation from "../components/SeverityExplanation"
 
 export default function InteractionChecker() {
   const [patients, setPatients] = useState([])
@@ -26,6 +27,21 @@ export default function InteractionChecker() {
 
   const [explanations, setExplanations] = useState(null)
   const [explanationMed, setExplanationMed] = useState(null)
+
+  const [severityExplanations, setSeverityExplanations] = useState(null)
+  const [severityExplanationTarget, setSeverityExplanationTarget] = useState(null)
+
+  async function handleExplainSeverity(factor, medicationName) {
+    setSeverityExplanationTarget({ factor, medicationName })
+    setSeverityExplanations(null)
+    try {
+      const result = await api.explainSeverity(factor, medicationName)
+      console.log("severity explanations:", result)
+      setSeverityExplanations(result)
+    } catch {
+      setSeverityExplanations([])
+    }
+  }
 
   useEffect(() => {
     api.fetchPatients()
@@ -54,6 +70,8 @@ export default function InteractionChecker() {
     setExplanations(null)
     setExplanationMed(null)
     setError(null)
+    setSeverityExplanations(null)
+    setSeverityExplanationTarget(null)
   }
 
   async function handleCheck() {
@@ -180,7 +198,7 @@ export default function InteractionChecker() {
                 <span className="tag">{interactions.length}</span>
               </div>
 
-              <InteractionList interactions={interactions} />
+              <InteractionList interactions={interactions} onExplain={handleExplainSeverity} />
 
               {hasContraindication && selectedMed && (
                 <button
@@ -188,8 +206,17 @@ export default function InteractionChecker() {
                   style={{ marginTop: 8 }}
                   onClick={() => handleExplain(selectedMed.name)}
                 >
-                  Explain why {selectedMed.name} is contraindicated →
+                  Explain why {selectedMed.name} is contraindicated?
                 </button>
+              )}
+
+              {severityExplanations !== null && severityExplanationTarget && (
+                <SeverityExplanation
+                  factor={severityExplanationTarget.factor}
+                  medicationName={severityExplanationTarget.medicationName}
+                  explanations={severityExplanations}
+                  onClose={() => { setSeverityExplanations(null); setSeverityExplanationTarget(null) }}
+                />
               )}
 
               {explanations !== null && explanationMed && (

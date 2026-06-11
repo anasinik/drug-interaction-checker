@@ -20,7 +20,8 @@ then
         $interaction.getInteractionType(),
         SeverityLevel.CONTRAINDICATED,
         SeverityLevel.CONTRAINDICATED.getScore(),
-        $interaction.getReason() + " Patient older than 65 with a renally cleared drug raises risk to contraindicated."));
+        $interaction.getReason() + " Patient older than 65 with a renally cleared drug raises risk to contraindicated.", 
+        $interaction.getFactor()));
 end
 
 // povecava ozbiljnost blage interakcije na ozbiljnu kod pacijenata sa vise od 5 lijekova (polifarmacija)
@@ -37,7 +38,8 @@ then
         $interaction.getInteractionType(),
         SeverityLevel.SERIOUS,
         SeverityLevel.SERIOUS.getScore(),
-        $interaction.getReason() + " Patient has polypharmacy, so the interaction is upgraded to serious."));
+        $interaction.getReason() + " Patient has polypharmacy, so the interaction is upgraded to serious.",
+        $interaction.getFactor()));
 end
 
 // racuna ukupni rizik terapije na osnovu detektovanih interakcija

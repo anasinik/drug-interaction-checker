@@ -53,6 +53,8 @@ public class CausalFactsInitializer {
     session.insert(new RiskMechanism("gastric irritation", "increased bleeding risk"));
     session.insert(new RiskMechanism("CYP3A4 inhibition", "simvastatin accumulation"));
     session.insert(new RiskMechanism("simvastatin accumulation", "rhabdomyolysis risk"));
+    session.insert(new RiskMechanism("antiplatelet effect", "increased bleeding risk"));
+    session.insert(new RiskMechanism("gastric irritation", "increased bleeding risk"));
 
     session.insert(new RiskClassification("drug accumulation", "SERIOUS"));
     session.insert(new RiskClassification("liver drug toxicity", "CONTRAINDICATED"));
@@ -66,6 +68,7 @@ public class CausalFactsInitializer {
     session.insert(new RiskClassification("increased bleeding risk", "SERIOUS"));
     session.insert(new RiskClassification("prolonged qt interval", "SERIOUS"));
     session.insert(new RiskClassification("cardiovascular strain", "SERIOUS"));
+    session.insert(new RiskClassification("increased bleeding risk", "SERIOUS"));
     session.insert(new RiskClassification("simvastatin accumulation", "CONTRAINDICATED"));
   }
 }

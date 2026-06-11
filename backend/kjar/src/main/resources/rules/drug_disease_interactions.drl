@@ -17,7 +17,8 @@ then
         InteractionType.DRUG_DISEASE,
         SeverityLevel.SERIOUS,
         SeverityLevel.SERIOUS.getScore(),
-        "Impaired kidney function slows drug excretion increasing bleeding risk"
+        "Impaired kidney function slows drug excretion increasing bleeding risk",
+        "renal insufficiency"
     ));
 end
 
@@ -37,7 +38,8 @@ then
         InteractionType.DRUG_DISEASE,
         SeverityLevel.CONTRAINDICATED,
         SeverityLevel.CONTRAINDICATED.getScore(),
-        "Drug accumulation leads to hypoglycemia risk"
+        "Drug accumulation leads to hypoglycemia risk",
+        "renal insufficiency"
     ));
 end
 
@@ -57,7 +59,8 @@ then
         InteractionType.DRUG_DISEASE,
         SeverityLevel.CONTRAINDICATED,
         SeverityLevel.CONTRAINDICATED.getScore(),
-        "Statins metabolized in liver, damaged liver causes toxicity"
+        "Statins metabolized in liver, damaged liver causes toxicity",
+        "liver disease"
     ));
 end
 
@@ -77,7 +80,8 @@ then
         InteractionType.DRUG_DISEASE,
         SeverityLevel.SERIOUS,
         SeverityLevel.SERIOUS.getScore(),
-        "Damaged liver combined with anticoagulant drastically increases bleeding risk"
+        "Damaged liver combined with anticoagulant drastically increases bleeding risk",
+        "liver disease"
     ));
 end
 

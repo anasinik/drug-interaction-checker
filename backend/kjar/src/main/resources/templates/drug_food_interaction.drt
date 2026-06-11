@@ -3,6 +3,7 @@ foodHabit
 medicationCategory
 severity
 reason
+factor
 
 package com.ftn.sbnz.kjar.rules;
 import com.ftn.sbnz.model.domain.*;
@@ -25,7 +26,8 @@ then
         InteractionType.DRUG_FOOD,
         SeverityLevel.@{severity},
         SeverityLevel.@{severity}.getScore(),
-        "@{reason}"
+        "@{reason}",
+        "@{factor}"
     ));
 end
 

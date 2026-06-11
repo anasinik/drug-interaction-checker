@@ -1,7 +1,7 @@
 import { INTERACTION_TYPE_LABEL } from "../constants"
 import SeverityBadge from "./SeverityBadge"
 
-export default function InteractionList({ interactions }) {
+export default function InteractionList({ interactions, onExplain }) {
   return (
     <div className="interaction-list">
       {interactions.map((item, i) => {
@@ -21,6 +21,15 @@ export default function InteractionList({ interactions }) {
             </div>
             <p className="interaction-item__meds">{medLabel}</p>
             <p className="interaction-item__reason">{item.reason}</p>
+            {item.factor && (
+              <button
+                className="btn btn--ghost"
+                style={{ marginTop: 8, fontSize: 12, padding: "4px 10px" }}
+                onClick={() => onExplain(item.factor, item.newMedication.name)}
+              >
+                Why?
+              </button>
+            )}
           </div>
         )
       })}

@@ -17,7 +17,8 @@ then
         InteractionType.DRUG_DISEASE,
         SeverityLevel.SERIOUS,
         SeverityLevel.SERIOUS.getScore(),
-        "Tricyclic antidepressants may worsen arrhythmia"
+        "Tricyclic antidepressants may worsen arrhythmia",
+        "cardiac arrhythmia"
     ));
 end
 
