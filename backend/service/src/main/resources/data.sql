@@ -15,18 +15,17 @@ INSERT INTO medication (id, name, category, renally_cleared, hepatically_metabol
     (13, 'Amlodipine',    'ANTIHYPERTENSIVE', false, true);
 
 
--- PACIJENT 1 - Ana Kovic, 40g
+-- PACIJENT 1 - Lana Kovic, 40g
 -- Pije: Warfarin, Metformin
 -- Dijagnoza: nema
 -- Navike: hrana bogata vitaminom K, alkohol
 --
--- + Warfarin (vec u terapiji) -> drug-food SERIOUS: vitamin K smanjuje efikasnost antikoagulanta
--- + Metformin (vec u terapiji) -> drug-food SERIOUS: alkohol povecava rizik od laktacidoze
 -- + Metronidazole -> drug-food CONTRAINDICATED: alkohol uz Metronidazole je opasna kombinacija
 --                -> drug-drug SERIOUS: antibiotik pojacava dejstvo Warfarina
+--              -> drug-drug SERIOUS: antidijabetik + antibiotik (Metformin vec u terapiji)
 
 INSERT INTO patient (id, name, age, weight_kg, jmbg) VALUES
-    (1, 'Ana Kovic', 40, 65.0, '1502984740011');
+    (1, 'Lana Kovic', 40, 65.0, '1502984740011');
 
 INSERT INTO patient_medications (patient_id, medication_id) VALUES (1, 1), (1, 12);
 
@@ -41,7 +40,6 @@ INSERT INTO patient_food_habits (patient_id, food_habit) VALUES
 -- Navike: nema
 --
 -- + Atorvastatin -> drug-disease CONTRAINDICATED: statini kontraindikovani kod oboljenja jetre
---               -> drug-drug MILD: statin + antidepresiv (Sertraline vec u terapiji)
 -- + Heparin     -> drug-disease SERIOUS: antikoagulant rizican kod ostecene jetre
 --               -> drug-drug: nema (isti tip kao Warfarin, ne postoji krizna kombinacija)
 

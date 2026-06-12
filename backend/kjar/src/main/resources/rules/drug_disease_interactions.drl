@@ -18,7 +18,7 @@ then
         SeverityLevel.SERIOUS,
         SeverityLevel.SERIOUS.getScore(),
         "Impaired kidney function slows drug excretion increasing bleeding risk",
-        "renal insufficiency"
+        "anticoagulant with renal insufficiency"
     ));
 end
 
@@ -39,7 +39,7 @@ then
         SeverityLevel.CONTRAINDICATED,
         SeverityLevel.CONTRAINDICATED.getScore(),
         "Drug accumulation leads to hypoglycemia risk",
-        "renal insufficiency"
+        "antidiabetic with renal insufficiency"
     ));
 end
 
@@ -60,7 +60,7 @@ then
         SeverityLevel.CONTRAINDICATED,
         SeverityLevel.CONTRAINDICATED.getScore(),
         "Statins metabolized in liver, damaged liver causes toxicity",
-        "liver disease"
+        "statin with liver disease"
     ));
 end
 
@@ -81,7 +81,7 @@ then
         SeverityLevel.SERIOUS,
         SeverityLevel.SERIOUS.getScore(),
         "Damaged liver combined with anticoagulant drastically increases bleeding risk",
-        "liver disease"
+        "anticoagulant with liver disease"
     ));
 end
 

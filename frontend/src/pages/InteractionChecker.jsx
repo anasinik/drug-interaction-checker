@@ -5,7 +5,6 @@ import PatientCard from "../components/PatientCard"
 import PatientDetail from "../components/PatientDetail"
 import SafetyReport from "../components/SafetyReport"
 import InteractionList from "../components/InteractionList"
-import ContraindicationExplanation from "../components/ContraindicationExplanation"
 import SeverityExplanation from "../components/SeverityExplanation"
 
 export default function InteractionChecker() {
@@ -200,30 +199,12 @@ export default function InteractionChecker() {
 
               <InteractionList interactions={interactions} onExplain={handleExplainSeverity} />
 
-              {hasContraindication && selectedMed && (
-                <button
-                  className="btn btn--ghost btn--full"
-                  style={{ marginTop: 8 }}
-                  onClick={() => handleExplain(selectedMed.name)}
-                >
-                  Explain why {selectedMed.name} is contraindicated?
-                </button>
-              )}
-
               {severityExplanations !== null && severityExplanationTarget && (
                 <SeverityExplanation
                   factor={severityExplanationTarget.factor}
                   medicationName={severityExplanationTarget.medicationName}
                   explanations={severityExplanations}
                   onClose={() => { setSeverityExplanations(null); setSeverityExplanationTarget(null) }}
-                />
-              )}
-
-              {explanations !== null && explanationMed && (
-                <ContraindicationExplanation
-                  medicationName={explanationMed}
-                  explanations={explanations}
-                  onClose={() => { setExplanations(null); setExplanationMed(null) }}
                 />
               )}
             </div>

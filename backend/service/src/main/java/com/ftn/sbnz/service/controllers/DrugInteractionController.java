@@ -42,15 +42,6 @@ public class DrugInteractionController {
         return ResponseEntity.ok(drugInteractionService.getDetectedInteractions(dto));
     }
 
-    @GetMapping("/contraindication-explanations")
-    public ResponseEntity<List<ContraindicationExplanation>> explainContraindication(
-            @RequestParam Long patientId,
-            @RequestParam String medicationName) {
-
-        return ResponseEntity.ok(
-                drugInteractionService.explainContraindication(patientId, medicationName));
-    }
-
     @GetMapping("/severity-explanation")
     public ResponseEntity<List<InteractionSeverityExplanation>> explainSeverity(
             @RequestParam String factor,

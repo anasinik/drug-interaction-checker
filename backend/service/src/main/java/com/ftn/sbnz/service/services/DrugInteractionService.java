@@ -74,41 +74,6 @@ public class DrugInteractionService {
                 }
         }
 
-        public List<ContraindicationExplanation> explainContraindication(
-                        Long patientId, String medicationName) {
-
-                PatientProfile patient = patientRepository.findById(patientId)
-                                .orElseThrow(() -> new RuntimeException("Patient not found: " + patientId));
-
-                KieSession session = kieContainer.newKieSession();
-                try {
-                        causalFactsInitializer.insertFacts(session);
-
-                        session.insert(new ExplanationRequest(patient, medicationName));
-
-                        session.fireAllRules();
-
-                        session.getObjects().forEach(
-                                        obj -> System.out.println(obj.getClass().getSimpleName() + ": " + obj));
-
-                        List<ContraindicationExplanation> explanations = session
-                                        .getObjects(obj -> obj instanceof ContraindicationExplanation)
-                                        .stream()
-                                        .map(obj -> (ContraindicationExplanation) obj)
-                                        .collect(Collectors.toList());
-
-                        System.out.println("ContraindicationExplanation count: " + explanations.size() + " ===");
-                        explanations.forEach(e -> System.out.println("  -> " + e));
-
-                        return session.getObjects(obj -> obj instanceof ContraindicationExplanation)
-                                        .stream()
-                                        .map(obj -> (ContraindicationExplanation) obj)
-                                        .collect(Collectors.toList());
-                } finally {
-                        session.dispose();
-                }
-        }
-
         public List<InteractionSeverityExplanation> explainSeverity(String factor, String medicationName) {
                 KieSession session = kieContainer.newKieSession();
                 try {

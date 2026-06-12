@@ -17,14 +17,18 @@ public class RuleGenerator {
         private static void generateDrugDrugInteractions() throws IOException {
                 List<Map<String, Object>> data = List.of(
                                 row2("ANTICOAGULANT", "ANTIBIOTIC", "SERIOUS",
-                                                "Antibiotics reduce vitamin K-producing bacteria..."),
-                                row2("ANTICOAGULANT", "ANTIDEPRESSANT", "MILD", "Increased risk of bleeding"),
+                                                "Antibiotics reduce vitamin K-producing bacteria...",
+                                                "anticoagulant with antibiotic"),
+                                row2("ANTICOAGULANT", "ANTIDEPRESSANT", "MILD", "Increased risk of bleeding",
+                                                "anticoagulant with antidepressant"),
                                 row2("ANTIDEPRESSANT", "ANTIDEPRESSANT", "CONTRAINDICATED",
-                                                "Risk of serotonin syndrome"),
+                                                "Risk of serotonin syndrome", "ANTIDEPRESSANT"),
                                 row2("ANTIDIABETIC", "ANTIBIOTIC", "SERIOUS",
-                                                "Antibiotics may enhance antidiabetic effect causing hypoglycemia"),
-                                row2("ANTIHYPERTENSIVE", "ANTIDEPRESSANT", "MILD", "Possible drop in blood pressure"),
-                                row2("STATIN", "ANTIBIOTIC", "SERIOUS", "Increased risk of myopathy"));
+                                                "Antibiotics may enhance antidiabetic effect causing hypoglycemia",
+                                                "antidiabetic with antibiotic"),
+                                row2("ANTIHYPERTENSIVE", "ANTIDEPRESSANT", "MILD", "Possible drop in blood pressure",
+                                                "antihypertensive with antidepressant"),
+                                row2("STATIN", "ANTIBIOTIC", "SERIOUS", "Increased risk of myopathy", "STATIN"));
                 generate("src/main/resources/templates/drug_drug_interaction.drt",
                                 "src/main/resources/rules/drug_drug_interactions.drl",
                                 data);
@@ -33,13 +37,17 @@ public class RuleGenerator {
         private static void generateDrugDiseaseInteractions() throws IOException {
                 List<Map<String, Object>> data = List.of(
                                 rowDisease("ANTICOAGULANT", "renal insufficiency", "SERIOUS",
-                                                "Impaired kidney function slows drug excretion increasing bleeding risk"),
+                                                "Impaired kidney function slows drug excretion increasing bleeding risk",
+                                                "anticoagulant with renal insufficiency"),
                                 rowDisease("ANTIDIABETIC", "renal insufficiency", "CONTRAINDICATED",
-                                                "Drug accumulation leads to hypoglycemia risk"),
+                                                "Drug accumulation leads to hypoglycemia risk",
+                                                "antidiabetic with renal insufficiency"),
                                 rowDisease("STATIN", "liver disease", "CONTRAINDICATED",
-                                                "Statins metabolized in liver, damaged liver causes toxicity"),
+                                                "Statins metabolized in liver, damaged liver causes toxicity",
+                                                "statin with liver disease"),
                                 rowDisease("ANTICOAGULANT", "liver disease", "SERIOUS",
-                                                "Damaged liver combined with anticoagulant drastically increases bleeding risk"));
+                                                "Damaged liver combined with anticoagulant drastically increases bleeding risk",
+                                                "anticoagulant with liver disease"));
                 generate("src/main/resources/templates/drug_disease_interaction.drt",
                                 "src/main/resources/rules/drug_disease_interactions.drl",
                                 data);
@@ -105,9 +113,9 @@ public class RuleGenerator {
         }
 
         private static Map<String, Object> rowDisease(String category, String diagnosis, String severity,
-                        String reason) {
+                        String reason, String factor) {
                 return Map.of("medicationCategory", category, "diagnosis", diagnosis,
-                                "severity", severity, "reason", reason, "factor", diagnosis);
+                                "severity", severity, "reason", reason, "factor", factor);
         }
 
         private static Map<String, Object> rowByName(String name, String diagnosis, String severity, String reason) {
@@ -120,7 +128,7 @@ public class RuleGenerator {
                                 "severity", severity, "reason", reason, "factor", allergy);
         }
 
-        private static Map<String, Object> row2(String a, String b, String severity, String reason) {
-                return Map.of("categoryA", a, "categoryB", b, "severity", severity, "reason", reason, "factor", a);
+        private static Map<String, Object> row2(String a, String b, String severity, String reason, String factor) {
+                return Map.of("categoryA", a, "categoryB", b, "severity", severity, "reason", reason, "factor", factor);
         }
 }

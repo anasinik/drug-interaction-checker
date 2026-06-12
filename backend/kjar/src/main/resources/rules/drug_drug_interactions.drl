@@ -34,7 +34,7 @@ then
         SeverityLevel.SERIOUS,
         SeverityLevel.SERIOUS.getScore(),
         "Antibiotics reduce vitamin K-producing bacteria...",
-        "ANTICOAGULANT"
+        "anticoagulant with antibiotic"
     ));
 end
 
@@ -71,7 +71,7 @@ then
         SeverityLevel.MILD,
         SeverityLevel.MILD.getScore(),
         "Increased risk of bleeding",
-        "ANTICOAGULANT"
+        "anticoagulant with antidepressant"
     ));
 end
 
@@ -145,7 +145,7 @@ then
         SeverityLevel.SERIOUS,
         SeverityLevel.SERIOUS.getScore(),
         "Antibiotics may enhance antidiabetic effect causing hypoglycemia",
-        "ANTIDIABETIC"
+        "antidiabetic with antibiotic"
     ));
 end
 
@@ -182,7 +182,7 @@ then
         SeverityLevel.MILD,
         SeverityLevel.MILD.getScore(),
         "Possible drop in blood pressure",
-        "ANTIHYPERTENSIVE"
+        "antihypertensive with antidepressant"
     ));
 end
 
