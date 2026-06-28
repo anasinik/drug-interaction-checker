@@ -31,7 +31,7 @@ Severity can also be **escalated** by patient profile rules, for example: a SERI
 ## Project Structure
 
 ```
-drug-interaction-checker/
+backend/
 ├── model/          # Shared domain model (Maven)
 ├── kjar/           # Drools knowledge base = rules, queries, templates (Maven)
 └── service/        # Spring Boot backend (Maven)
