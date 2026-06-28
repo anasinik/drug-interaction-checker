@@ -1,4 +1,3 @@
--- Lijekovi (referentna tabela)
 INSERT INTO medication (id, name, category, renally_cleared, hepatically_metabolized) VALUES
     (1,  'Warfarin',      'ANTICOAGULANT',    true,  false),
     (2,  'Heparin',       'ANTICOAGULANT',    true,  false),
@@ -21,7 +20,7 @@ INSERT INTO medication (id, name, category, renally_cleared, hepatically_metabol
 -- Navike: hrana bogata vitaminom K, alkohol
 --
 -- + Metronidazole -> drug-food CONTRAINDICATED: alkohol uz Metronidazole je opasna kombinacija
---                -> drug-drug SERIOUS: antibiotik pojacava dejstvo Warfarina
+--                -> drug-drug SERIOUS: antibiotik pojacava dejstvo Warfarina (antikoagulant)
 --              -> drug-drug SERIOUS: antidijabetik + antibiotik (Metformin vec u terapiji)
 
 INSERT INTO patient (id, name, age, weight_kg, jmbg) VALUES
@@ -41,8 +40,8 @@ INSERT INTO patient_food_habits (patient_id, food_habit) VALUES
 --
 -- + Atorvastatin -> drug-disease CONTRAINDICATED: statini kontraindikovani kod oboljenja jetre
 -- + Heparin     -> drug-disease SERIOUS: antikoagulant rizican kod ostecene jetre
---               -> drug-drug: nema (isti tip kao Warfarin, ne postoji krizna kombinacija)
-
+--               -> drug-drug: MILD antikoagulant + antidepresiv (Heparin + Sertraline)
+--               -> drug-drug CONTRAINDICATED: statini kontraindikovani kod oboljenja jetre
 INSERT INTO patient (id, name, age, weight_kg, jmbg) VALUES
     (2, 'Bojana Stefanovic', 52, 70.0, '0803972740022');
 
