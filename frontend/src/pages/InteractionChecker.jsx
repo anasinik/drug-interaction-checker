@@ -30,17 +30,17 @@ export default function InteractionChecker() {
   const [severityExplanations, setSeverityExplanations] = useState(null)
   const [severityExplanationTarget, setSeverityExplanationTarget] = useState(null)
 
-  async function handleExplainSeverity(factor, medicationName) {
-    setSeverityExplanationTarget({ factor, medicationName })
-    setSeverityExplanations(null)
-    try {
-      const result = await api.explainSeverity(factor, medicationName)
-      console.log("severity explanations:", result)
-      setSeverityExplanations(result)
-    } catch {
-      setSeverityExplanations([])
-    }
+  async function handleExplainSeverity(factor, medicationName, severity) {
+  setSeverityExplanationTarget({ factor, medicationName })
+  setSeverityExplanations(null)
+  try {
+    const result = await api.explainSeverity(factor, medicationName)
+    const fixed = result.map(e => ({ ...e, finalRiskLevel: severity }))
+    setSeverityExplanations(fixed)
+  } catch {
+    setSeverityExplanations([])
   }
+}
 
   useEffect(() => {
     api.fetchPatients()

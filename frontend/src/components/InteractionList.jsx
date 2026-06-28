@@ -25,7 +25,7 @@ export default function InteractionList({ interactions, onExplain }) {
               <button
                 className="btn btn--ghost"
                 style={{ marginTop: 8, fontSize: 12, padding: "4px 10px" }}
-                onClick={() => onExplain(item.factor, item.newMedication.name)}
+                onClick={() => onExplain(item.factor, item.newMedication.name, item.severity)}
               >
                 Why?
               </button>
